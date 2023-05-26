@@ -9,9 +9,9 @@
     "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Api.ts",
     "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Worker.ts",
     "test": "jest",
-    "build": "tsc",
-    "prod": "node ./Infra/Api.js",
-    "prod-worker": "node ./Infra/Worker.js"
+    "build": "rm -rf ./dist && tsc",
+    "prod": "node ./dist/Infra/Api.js",
+    "prod-worker": "node ./dist/Infra/Worker.js"
   },
   "dependencies": {
     "amqplib": "^0.10.0",

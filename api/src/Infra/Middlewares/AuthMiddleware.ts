@@ -10,7 +10,7 @@ import { AuthenticationDao } from '../Models/AuthenticationDao'
 
 export class AuthMiddleware {
   public constructor() {
-    this.all = this.all.bind(this)
+    this.forAll = this.forAll.bind(this)
     this.isPublicRequest = this.isPublicRequest.bind(this)
     this.isGuestRequest = this.isGuestRequest.bind(this)
     this.formatRequest = this.formatRequest.bind(this)
@@ -18,7 +18,7 @@ export class AuthMiddleware {
     this.decodeToken = this.decodeToken.bind(this)
   }
 
-  public async all(req: CoreRequest, res: Response, next: NextFunction) {
+  public async forAll(req: CoreRequest, res: Response, next: NextFunction): Promise<void> {
     let userPermissions = []
 
     if (this.isPublicRequest(req)) {
@@ -31,31 +31,31 @@ export class AuthMiddleware {
       const decodedToken = this.decodeToken(token)
 
       if (tokenType !== 'Bearer' || !decodedToken) {
-        return res.status(401).send({
+        res.status(401).send({
           code: `401.unauthorizedException`,
           message: 'Unauthorized.'
         })
+        return
       }
 
       await new Postgres().createDataSource()
       const postgres = Postgres.getDataSource()
 
-      const authentication = await postgres
-        .getRepository(AuthenticationDao)
-        .findOne({
-          where: {
-            userOrganization: {
-              user: { id: decodedToken.user.id },
-              organization: { id: decodedToken.organization.id }
-            }
+      const authentication = await postgres.getRepository(AuthenticationDao).findOne({
+        where: {
+          userOrganization: {
+            user: { id: decodedToken.user.id },
+            organization: { id: decodedToken.organization.id }
           }
-        })
+        }
+      })
 
       if (!userPermissions) {
-        return res.status(401).send({
+        res.status(401).send({
           code: `401.unauthorizedException`,
           message: 'Unauthorized.'
         })
+        return
       }
 
       this.formatRequest(req, decodedToken.user.roleType, decodedToken)
@@ -64,10 +64,11 @@ export class AuthMiddleware {
     const roleType = req.context.user.roleType as UserRoleTypeEnum
 
     if (!(await this.validateRoleAndPermissions(req, roleType, userPermissions))) {
-      return res.status(401).send({
+      res.status(401).send({
         code: `401.unauthorizedException`,
         message: 'Unauthorized.'
       })
+      return
     }
 
     next()

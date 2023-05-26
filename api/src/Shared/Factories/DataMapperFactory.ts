@@ -1,6 +1,5 @@
 import { AuthenticationDataMapper } from '../../Infra/DataMappers/AuthenticationDataMapper'
 import { OrganizationDataMapper } from '../../Infra/DataMappers/OrganizationDataMapper'
-import { OrganizationDataMapperMediator } from '../../Infra/DataMappers/OrganizationDataMapperMediator'
 import { UserDataMapper } from '../../Infra/DataMappers/UserDataMapper'
 import { UserDataMapperMediator } from '../../Infra/DataMappers/UserDataMapperMediator'
 import { UserOrganizationDataMapper } from '../../Infra/DataMappers/UserOrganizationDataMapper'
@@ -30,12 +29,5 @@ export class DataMapperFactory {
 
   public buildOrganizationDataMapper() {
     return new OrganizationDataMapper()
-  }
-
-  public buildOrganizationDataMapperMediator() {
-    return new OrganizationDataMapperMediator(
-      this.buildOrganizationDataMapper(),
-      this.buildUserDataMapper()
-    )
   }
 }

@@ -10,7 +10,7 @@ export class Postgres {
   public async createDataSource() {
     Postgres.dataSource = new typeORM.DataSource({
       type: 'postgres',
-      url: process.env.POSTGRES_URL,
+      url: process.env.DATABASE_URL,
       entities: [
         path.join(__dirname, '..', '..', 'Infra', 'Models', '*.ts'),
         path.join(__dirname, '..', '..', 'Infra', 'Models', '*.js')

@@ -7,6 +7,7 @@ import { CreatedResponse } from '../Models/Response/CreatedResponse'
 import { NoContentResponse } from '../Models/Response/NoContentResponse'
 import { OkResponse } from '../Models/Response/OkResponse'
 import { SuccessContract } from '../Models/Response/SuccessContract'
+import { ResponseModel } from '../Models/ResponseModel'
 import { ViewContract } from '../Views/Contracts/ViewContract'
 
 export abstract class BaseController {
@@ -17,7 +18,7 @@ export abstract class BaseController {
     next: NextFunction,
     promise: any,
     responseType: ResponseTypeEnum,
-    view?: ViewContract
+    view?: ViewContract<ResponseModel>
   ): Promise<void> {
     try {
       const body = await promise
@@ -46,10 +47,7 @@ export abstract class BaseController {
     response.json(result.getBody())
   }
 
-  private buildSuccessResponse(
-    responseType: ResponseTypeEnum,
-    body: any
-  ): SuccessContract {
+  private buildSuccessResponse(responseType: ResponseTypeEnum, body: any): SuccessContract {
     if (!body) {
       return new NoContentResponse()
     }

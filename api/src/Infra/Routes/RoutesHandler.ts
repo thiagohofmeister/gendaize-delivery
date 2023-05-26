@@ -52,7 +52,7 @@ export class RoutesHandler {
   }
 
   private getAuthMiddlewares() {
-    return [new AuthMiddleware().all]
+    return [new AuthMiddleware().forAll]
   }
 
   private getDefaultMiddlewares() {
