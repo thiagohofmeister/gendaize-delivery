@@ -7,7 +7,7 @@ export interface AuthenticationTokenDto {
     email: string
     roleType: UserRoleTypeEnum
   }
-  store: {
+  organization: {
     id: string
   }
 }

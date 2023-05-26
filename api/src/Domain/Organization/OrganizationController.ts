@@ -26,6 +26,8 @@ export class OrganizationController extends BaseController {
   }
 
   protected getFacade(req: CoreRequest) {
-    return Factory.getInstance().buildFacadeFactory(req.context?.storeId).buildOrganizationFacade()
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.organizationId)
+      .buildOrganizationFacade()
   }
 }

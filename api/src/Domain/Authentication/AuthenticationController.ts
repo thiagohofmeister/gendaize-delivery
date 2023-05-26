@@ -29,7 +29,12 @@ export class AuthenticationController extends BaseController {
     return this.responseHandler(
       res,
       next,
-      this.getFacade(req).create({ device: 'device', isCustomer: false, login, password }),
+      this.getFacade(req).create({
+        device: req.header('User-Agent'),
+        isCustomer: false,
+        login,
+        password
+      }),
       ResponseTypeEnum.CREATED
     )
   }
@@ -40,7 +45,7 @@ export class AuthenticationController extends BaseController {
 
   protected getFacade(req: CoreRequest) {
     return Factory.getInstance()
-      .buildFacadeFactory(req.context?.storeId)
+      .buildFacadeFactory(req.context?.organizationId)
       .buildAuthenticationFacade()
   }
 }

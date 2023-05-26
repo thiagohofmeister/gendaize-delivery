@@ -19,7 +19,10 @@ export class RegisterService {
 
     await this.validateIfUserAlreadyExists(data.user.documentNumber, invalidDataException)
 
-    await this.validateIfStoreAlreadyExists(data.organization.document.number, invalidDataException)
+    await this.validateIfOrganizationAlreadyExists(
+      data.organization.document.number,
+      invalidDataException
+    )
 
     if (!!invalidDataException.getReasons().length) {
       throw invalidDataException
@@ -44,7 +47,7 @@ export class RegisterService {
     })
   }
 
-  private async validateIfStoreAlreadyExists(
+  private async validateIfOrganizationAlreadyExists(
     documentNumber: string,
     invalidDataException: InvalidDataException
   ) {

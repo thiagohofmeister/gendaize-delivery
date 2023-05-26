@@ -6,44 +6,30 @@ import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 import { IRepository } from '../../Models/Interfaces/IRepository'
 import { RedisCollection } from '../../Models/RedisCollection'
 
-export abstract class RedisClientRepositoryContract<
-  TDomainValue,
-  TDaoValue = TDomainValue
-> implements IRepository<RedisCollection<TDomainValue>>
+export abstract class RedisClientRepositoryContract<TDomainValue, TDaoValue = TDomainValue>
+  implements IRepository<RedisCollection<TDomainValue>>
 {
   constructor(
     protected readonly repository: RedisClientType,
-    protected readonly dataMapper: EntityDataMapperContract<
-      TDomainValue,
-      TDaoValue
-    >,
-    protected storeId: string | null,
+    protected readonly dataMapper: EntityDataMapperContract<TDomainValue, TDaoValue>,
+    protected organizationId: string | null,
     protected dataNotFoundException?: DataNotFoundException
   ) {
-    if (!dataNotFoundException)
-      this.dataNotFoundException = new DataNotFoundException()
+    if (!dataNotFoundException) this.dataNotFoundException = new DataNotFoundException()
   }
 
-  findAll(
-    filter: IFilterDefault
-  ): Promise<IItemListModel<RedisCollection<TDomainValue>>> {
+  findAll(filter: IFilterDefault): Promise<IItemListModel<RedisCollection<TDomainValue>>> {
     throw new Error('Method not implemented.')
   }
 
-  async findOneByPrimaryColumn(
-    id: string
-  ): Promise<RedisCollection<TDomainValue>> {
+  async findOneByPrimaryColumn(id: string): Promise<RedisCollection<TDomainValue>> {
     const value = await this.repository.get(this.getFullKey(id))
 
     if (!value) throw this.dataNotFoundException
 
     const ttl = await this.repository.ttl(this.getFullKey(id))
 
-    return new RedisCollection(
-      id,
-      this.dataMapper.toDomainEntity(JSON.parse(value)),
-      ttl
-    )
+    return new RedisCollection(id, this.dataMapper.toDomainEntity(JSON.parse(value)), ttl)
   }
 
   async delete(key: string): Promise<boolean> {
@@ -56,21 +42,15 @@ export abstract class RedisClientRepositoryContract<
     }
   }
 
-  async create(
-    entity: RedisCollection<TDomainValue>
-  ): Promise<RedisCollection<TDomainValue>> {
-    await this.repository.set(
-      this.getFullKey(entity.getKey()),
-      JSON.stringify(entity.getValue()),
-      { EX: this.getSecondsToExpire(entity.getExpiration()) }
-    )
+  async create(entity: RedisCollection<TDomainValue>): Promise<RedisCollection<TDomainValue>> {
+    await this.repository.set(this.getFullKey(entity.getKey()), JSON.stringify(entity.getValue()), {
+      EX: this.getSecondsToExpire(entity.getExpiration())
+    })
 
     return entity
   }
 
-  async save(
-    entity: RedisCollection<TDomainValue>
-  ): Promise<RedisCollection<TDomainValue>> {
+  async save(entity: RedisCollection<TDomainValue>): Promise<RedisCollection<TDomainValue>> {
     return this.create(entity)
   }
 
@@ -93,8 +73,7 @@ export abstract class RedisClientRepositoryContract<
       const localDate = new Date(
         new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
       )
-      const secondsToExpire =
-        (expiration.getTime() - localDate.getTime()) / 1000
+      const secondsToExpire = (expiration.getTime() - localDate.getTime()) / 1000
 
       return Math.min(secondsToExpire, this.getDefaultExpirationInSeconds())
     }
@@ -107,7 +86,7 @@ export abstract class RedisClientRepositoryContract<
   }
 
   protected getFullKey(key: string): string {
-    return [this.getKeyPrefix(), key, this.storeId].filter(i => !!i).join(':')
+    return [this.getKeyPrefix(), key, this.organizationId].filter(i => !!i).join(':')
   }
 
   protected abstract getKeyPrefix(): string

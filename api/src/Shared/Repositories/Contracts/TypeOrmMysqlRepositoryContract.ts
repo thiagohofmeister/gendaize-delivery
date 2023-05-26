@@ -62,15 +62,15 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async findAll<TFilter extends IFilterDefault>(
     filter: TFilter,
-    bypassStoreId: boolean = false
+    bypassorganizationId: boolean = false
   ): Promise<IItemListModel<TDomainEntity>> {
     const query = this.applyPaginator(
       filter,
       this.customToFindAll(this.repository.createQueryBuilder(), filter)
     )
 
-    if (this.hasColumn('organizationId') && !bypassStoreId) {
-      query.andWhere(`${this.getTableName()}.store_id = :organizationId`, {
+    if (this.hasColumn('organizationId') && !bypassorganizationId) {
+      query.andWhere(`${this.getTableName()}.organization_id = :organizationId`, {
         organizationId: this.organizationId
       })
     }
@@ -80,7 +80,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async findOneByPrimaryColumn(
     value: string,
-    bypassStoreId: boolean = false
+    bypassorganizationId: boolean = false
   ): Promise<TDomainEntity> {
     const query = this.customToFindOneByPrimaryColumn(
       this.repository
@@ -88,8 +88,8 @@ export abstract class TypeOrmMysqlRepositoryContract<
         .where(`${this.getTableName()}.${this.getPrimaryColumnName()} = :value`, { value })
     )
 
-    if (this.hasColumn('organizationId') && !bypassStoreId)
-      query.andWhere(`${this.getTableName()}.store_id = :organizationId`, {
+    if (this.hasColumn('organizationId') && !bypassorganizationId)
+      query.andWhere(`${this.getTableName()}.organization_id = :organizationId`, {
         organizationId: this.organizationId
       })
 

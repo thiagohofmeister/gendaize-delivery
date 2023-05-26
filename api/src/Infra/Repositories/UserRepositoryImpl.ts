@@ -16,8 +16,7 @@ export class UserRepositoryImpl
       .innerJoinAndSelect('userOrganizations.organization', 'organization')
       .where('(UserDao.email = :login or UserDao.document_number = :password)', { login })
       .andWhere('UserDao.password = :password', {
-        //password: this.createHash256(this.createHash256(password))
-        password
+        password: this.createHash256(this.createHash256(password))
       })
 
     return this.getOne(query)

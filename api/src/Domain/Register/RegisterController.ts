@@ -26,6 +26,8 @@ export class RegisterController extends BaseController {
   }
 
   protected getFacade(req: CoreRequest) {
-    return Factory.getInstance().buildFacadeFactory(req.context?.storeId).buildRegisterFacade()
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.organizationId)
+      .buildRegisterFacade()
   }
 }

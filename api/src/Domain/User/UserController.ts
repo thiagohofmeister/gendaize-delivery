@@ -27,6 +27,8 @@ export class UserController extends BaseController {
   }
 
   protected getFacade(request: CoreRequest): UserFacade {
-    return Factory.getInstance().buildFacadeFactory(request.context?.storeId).buildUserFacade()
+    return Factory.getInstance()
+      .buildFacadeFactory(request.context?.organizationId)
+      .buildUserFacade()
   }
 }

@@ -14,7 +14,8 @@ export class CreateContext {
     }
 
     request.context = {
-      storeId: request.header('PLATFORM-STORE-ID')
+      organizationId: request.header('PLATFORM-ORGANIZATION-ID'),
+      isCustomer: request.header('PLATFORM') !== 'MANAGER'
     }
 
     next()

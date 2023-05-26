@@ -11,20 +11,24 @@ export class Factory {
 
   private constructor() {}
 
-  public buildFacadeFactory(storeId: string) {
-    return new FacadeFactory(this.buildServiceFactory(storeId))
+  public buildFacadeFactory(organizationId: string) {
+    return new FacadeFactory(this.buildServiceFactory(organizationId))
   }
 
   public buildProviderFactory() {
     return new ProviderFactory()
   }
 
-  public buildRepositoryFactory(storeId: string) {
-    return new RepositoryFactory(this.buildDataMapperFactory(), Postgres.getDataSource(), storeId)
+  public buildRepositoryFactory(organizationId: string) {
+    return new RepositoryFactory(
+      this.buildDataMapperFactory(),
+      Postgres.getDataSource(),
+      organizationId
+    )
   }
 
-  public buildServiceFactory(storeId: string) {
-    return new ServiceFactory(this.buildRepositoryFactory(storeId), this.buildQueueFactory())
+  public buildServiceFactory(organizationId: string) {
+    return new ServiceFactory(this.buildRepositoryFactory(organizationId), this.buildQueueFactory())
   }
 
   public buildDataMapperFactory() {

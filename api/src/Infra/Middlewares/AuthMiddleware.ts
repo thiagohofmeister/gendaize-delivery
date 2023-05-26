@@ -1,6 +1,5 @@
 import { NextFunction, Response } from 'express'
 import * as jwt from 'jsonwebtoken'
-import * as md5 from 'md5'
 
 import { EndpointPermissionsService } from '../../Domain/EndpointPermissions/EndpointPermissionsService'
 import { AuthenticationTokenDto } from '../../Domain/User/Dto/AuthenticationTokenDto'
@@ -43,7 +42,14 @@ export class AuthMiddleware {
 
       const authentication = await postgres
         .getRepository(AuthenticationDao)
-        .findOne({ where: { user: { id: decodedToken.user.id } } })
+        .findOne({
+          where: {
+            userOrganization: {
+              user: { id: decodedToken.user.id },
+              organization: { id: decodedToken.organization.id }
+            }
+          }
+        })
 
       if (!userPermissions) {
         return res.status(401).send({
@@ -68,11 +74,11 @@ export class AuthMiddleware {
   }
 
   private isPublicRequest(req: CoreRequest) {
-    return !req.header('x-store') && !req.header('authorization')
+    return !req.header('x-organization') && !req.header('authorization')
   }
 
   private isGuestRequest(req: CoreRequest) {
-    return !!req.header('x-store')
+    return !!req.header('x-organization')
   }
 
   private formatRequest(
@@ -82,7 +88,7 @@ export class AuthMiddleware {
   ) {
     if (roleType === UserRoleTypeEnum.GUEST) {
       req.context = {
-        storeId: req.header('x-store'),
+        organizationId: req.header('x-store'),
         user: {
           id: 'guest',
           email: 'guest@platform.com',
@@ -93,7 +99,7 @@ export class AuthMiddleware {
       delete req.headers['authorization']
 
       req.context = {
-        storeId: token.store.id,
+        organizationId: token.organization.id,
         user: {
           id: token.user.id,
           email: token.user.email,

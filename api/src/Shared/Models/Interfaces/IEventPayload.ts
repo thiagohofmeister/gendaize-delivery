@@ -1,3 +1,3 @@
 export interface IEventPayload {
-  storeId: string
+  organizationId: string
 }

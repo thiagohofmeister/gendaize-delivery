@@ -1,5 +1,6 @@
 export interface ApiContext {
-  storeId?: string
+  organizationId?: string
+  isCustomer?: boolean
   user?: {
     id?: string
     email?: string
