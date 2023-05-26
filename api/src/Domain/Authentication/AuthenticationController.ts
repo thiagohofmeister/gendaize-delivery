@@ -31,7 +31,7 @@ export class AuthenticationController extends BaseController {
       next,
       this.getFacade(req).create({
         device: req.header('User-Agent'),
-        isCustomer: false,
+        isCustomer: req.context?.isCustomer,
         login,
         password
       }),
