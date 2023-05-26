@@ -58,3 +58,78 @@ CREATE TABLE public.authentication (
 	CONSTRAINT authentication_pk PRIMARY KEY (id),
 	CONSTRAINT authentication_fk FOREIGN KEY (user_organization_id) REFERENCES public.user_organization(id)
 );
+
+
+-- -----------------------------------------------------
+-- Table `product_type`
+-- -----------------------------------------------------
+CREATE TABLE public.product_type (
+	id char(36) NOT NULL,
+	"label" varchar NOT NULL,
+  organization_id char(36) NOT NULL,
+	CONSTRAINT product_type_pk PRIMARY KEY (id),
+  CONSTRAINT product_type_fk FOREIGN KEY (organization_id) REFERENCES public.organization(id)
+);
+
+
+-- -----------------------------------------------------
+-- Table `attribute`
+-- -----------------------------------------------------
+CREATE TABLE public."attribute" (
+	id char(36) NULL,
+	"label" varchar NULL,
+	"type" varchar NULL,
+	"values" json NULL,
+	product_type_id char(36) NOT NULL,
+	organization_id char(36) NOT NULL,
+	CONSTRAINT attribute_pk PRIMARY KEY (id),
+	CONSTRAINT attribute_fk FOREIGN KEY (product_type_id) REFERENCES public.product_type(id),
+	CONSTRAINT attribute_fk_1 FOREIGN KEY (organization_id) REFERENCES public.organization(id)
+);
+
+
+-- -----------------------------------------------------
+-- Table `product`
+-- -----------------------------------------------------
+CREATE TABLE public.product (
+	id char(36) NOT NULL,
+	"name" varchar NOT NULL,
+	description varchar NULL,
+	variation_template varchar NULL,
+	status varchar NOT NULL,
+	product_type char(36) NOT NULL,
+	organization_id char(36) NOT NULL,
+	CONSTRAINT product_pk PRIMARY KEY (id),
+	CONSTRAINT product_fk FOREIGN KEY (organization_id) REFERENCES public.organization(id),
+	CONSTRAINT product_fk_1 FOREIGN KEY (product_type) REFERENCES public.product_type(id)
+);
+
+
+-- -----------------------------------------------------
+-- Table `variation`
+-- -----------------------------------------------------
+CREATE TABLE public.variation (
+	id char(36) NOT NULL,
+	code varchar NULL,
+	price_list int NOT NULL,
+	price_sale int NOT NULL,
+	variation_combination varchar NULL,
+	status varchar NOT NULL,
+	product_id char(36) NOT NULL,
+	CONSTRAINT variation_pk PRIMARY KEY (id),
+	CONSTRAINT variation_fk FOREIGN KEY (product_id) REFERENCES public.product(id),
+  CONSTRAINT variation_un UNIQUE (product_id,variation_combination)
+);
+
+
+-- -----------------------------------------------------
+-- Table `image`
+-- -----------------------------------------------------
+CREATE TABLE public.image (
+	id char(36) NOT NULL,
+	urn text NOT NULL,
+	variation_combination varchar NULL,
+	product_id char(36) NOT NULL,
+	CONSTRAINT image_pk PRIMARY KEY (id),
+	CONSTRAINT image_fk FOREIGN KEY (product_id) REFERENCES public.product(id)
+);
