@@ -1,21 +1,18 @@
 import { FindManyOptions, MongoRepository, ObjectLiteral } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
-import { EntityDataMapperContract } from '../../DataMappers/Contracts/EntityDataMapperContract'
+import { DaoModel } from '../../Models/DaoModel'
+import { DomainModel } from '../../Models/DomainModel'
 import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
 import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 import { RepositoryContract } from './RepositoryContract'
 
 export abstract class TypeOrmMongoDBRepositoryContract<
-  TDomainEntity,
-  TDaoEntity
+  TDomainEntity extends DomainModel,
+  TDaoEntity extends DaoModel
 > extends RepositoryContract<TDomainEntity, null> {
-  public constructor(
-    protected readonly repository: MongoRepository<TDaoEntity>,
-    protected readonly dataMapper: EntityDataMapperContract<TDomainEntity, TDaoEntity>
-  ) {
+  public constructor(protected readonly repository: MongoRepository<TDaoEntity>) {
     super()
     this.repository = repository
-    this.dataMapper = dataMapper
   }
 
   public async getAll(filters: IFilterDefault): Promise<IItemListModel<TDomainEntity>> {
@@ -77,7 +74,7 @@ export abstract class TypeOrmMongoDBRepositoryContract<
     try {
       const result = await this.repository.update(
         conditions,
-        this.dataMapper.toDaoEntity(entity) as QueryDeepPartialEntity<TDaoEntity>
+        entity.toDao() as QueryDeepPartialEntity<TDaoEntity>
       )
 
       return !!result.affected
@@ -169,10 +166,10 @@ export abstract class TypeOrmMongoDBRepositoryContract<
   }
 
   protected getDaoEntityByDomainEntity(domain: TDomainEntity): TDaoEntity {
-    return this.dataMapper.toDaoEntity(domain)
+    return domain.toDao()
   }
 
-  protected getDomainEntityByDaoEntity(dao: TDaoEntity): TDomainEntity {
-    return this.dataMapper.toDomainEntity(dao)
+  protected getDomainEntityByDaoEntity(entity: TDaoEntity): TDomainEntity {
+    return entity.toDomain()
   }
 }

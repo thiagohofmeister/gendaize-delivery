@@ -1,7 +1,8 @@
-import { AuthenticationFacade } from '../../Domain/Authentication/AuthenticationFacade'
-import { OrganizationFacade } from '../../Domain/Organization/OrganizationFacade'
-import { RegisterFacade } from '../../Domain/Register/RegisterFacade'
-import { UserFacade } from '../../Domain/User/UserFacade'
+import { AuthenticationFacade } from '../../Authentication/AuthenticationFacade'
+import { OrganizationFacade } from '../../Organization/OrganizationFacade'
+import { ProductTypeFacade } from '../../ProductType/ProductTypeFacade'
+import { RegisterFacade } from '../../Register/RegisterFacade'
+import { UserFacade } from '../../User/UserFacade'
 import { ServiceFactory } from './ServiceFactory'
 
 export class FacadeFactory {
@@ -21,5 +22,9 @@ export class FacadeFactory {
 
   public buildUserFacade() {
     return new UserFacade(this.serviceFactory)
+  }
+
+  public buildProductTypeFacade() {
+    return new ProductTypeFacade(this.serviceFactory)
   }
 }

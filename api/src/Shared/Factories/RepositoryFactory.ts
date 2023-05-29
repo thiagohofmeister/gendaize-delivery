@@ -1,30 +1,27 @@
 import { DataSource, EntityManager } from 'typeorm'
 
-import { AuthenticationRepository } from '../../Domain/Authentication/Repositories/AuthenticationRepository'
-import { OrganizationRepository } from '../../Domain/Organization/Repositories/OrganizationRepository'
-import { UserRepository } from '../../Domain/User/Repositories/UserRepository'
-import { UserOrganizationRepository } from '../../Domain/UserOrganization/Repositories/UserOrganizationRepository'
-import { AuthenticationDao } from '../../Infra/Models/AuthenticationDao'
-import { OrganizationDao } from '../../Infra/Models/OrganizationDao'
-import { UserDao } from '../../Infra/Models/UserDao'
-import { UserOrganizationDao } from '../../Infra/Models/UserOrganizationDao'
-import { AuthenticationRepositoryImpl } from '../../Infra/Repositories/AuthenticationRepositoryImpl'
-import { OrganizationRepositoryImpl } from '../../Infra/Repositories/OrganizationRepositoryImpl'
-import { UserOrganizationRepositoryImpl } from '../../Infra/Repositories/UserOrganizationRepositoryImpl'
-import { UserRepositoryImpl } from '../../Infra/Repositories/UserRepositoryImpl'
-import { DataMapperFactory } from './DataMapperFactory'
+import { AuthenticationDao } from '../../Authentication/Models/AuthenticationDao'
+import { AuthenticationRepository } from '../../Authentication/Repositories/AuthenticationRepository'
+import { AuthenticationRepositoryImpl } from '../../Authentication/Repositories/AuthenticationRepositoryImpl'
+import { OrganizationDao } from '../../Organization/Models/OrganizationDao'
+import { OrganizationRepository } from '../../Organization/Repositories/OrganizationRepository'
+import { OrganizationRepositoryImpl } from '../../Organization/Repositories/OrganizationRepositoryImpl'
+import { ProductTypeDao } from '../../ProductType/Models/ProductTypeDao'
+import { ProductTypeRepository } from '../../ProductType/Repositories/ProductTypeRepository'
+import { ProductTypeRepositoryImpl } from '../../ProductType/Repositories/ProductTypeRepositoryImpl'
+import { UserDao } from '../../User/Models/UserDao'
+import { UserRepository } from '../../User/Repositories/UserRepository'
+import { UserRepositoryImpl } from '../../User/Repositories/UserRepositoryImpl'
+import { UserOrganizationDao } from '../../UserOrganization/Models/UserOrganizationDao'
+import { UserOrganizationRepository } from '../../UserOrganization/Repositories/UserOrganizationRepository'
+import { UserOrganizationRepositoryImpl } from '../../UserOrganization/Repositories/UserOrganizationRepositoryImpl'
 
 export class RepositoryFactory {
-  constructor(
-    private readonly dataMapperFactory: DataMapperFactory,
-    private readonly dataSource: DataSource,
-    private readonly organizationId: string
-  ) {}
+  constructor(private readonly dataSource: DataSource, private readonly organizationId: string) {}
 
   public buildAuthenticationRepository(manager?: EntityManager): AuthenticationRepository {
     return new AuthenticationRepositoryImpl(
       this.getManager(manager).getRepository(AuthenticationDao),
-      this.dataMapperFactory.buildAuthenticationDataMapper(),
       this.organizationId
     )
   }
@@ -32,7 +29,13 @@ export class RepositoryFactory {
   public buildUserRepository(manager?: EntityManager): UserRepository {
     return new UserRepositoryImpl(
       this.getManager(manager).getRepository(UserDao),
-      this.dataMapperFactory.buildUserDataMapperMediator(),
+      this.organizationId
+    )
+  }
+
+  public buildProductTypeRepository(manager?: EntityManager): ProductTypeRepository {
+    return new ProductTypeRepositoryImpl(
+      this.getManager(manager).getRepository(ProductTypeDao),
       this.organizationId
     )
   }
@@ -40,7 +43,6 @@ export class RepositoryFactory {
   public buildOrganizationRepository(manager?: EntityManager): OrganizationRepository {
     return new OrganizationRepositoryImpl(
       this.getManager(manager).getRepository(OrganizationDao),
-      this.dataMapperFactory.buildOrganizationDataMapper(),
       this.organizationId
     )
   }
@@ -48,7 +50,6 @@ export class RepositoryFactory {
   public buildUserOrganizationRepository(manager?: EntityManager): UserOrganizationRepository {
     return new UserOrganizationRepositoryImpl(
       this.getManager(manager).getRepository(UserOrganizationDao),
-      this.dataMapperFactory.buildUserOrganizationDataMapper(),
       this.organizationId
     )
   }

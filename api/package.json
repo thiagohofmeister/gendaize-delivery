@@ -6,12 +6,12 @@
   "author": "Thiago Hofmeister <thiago.hofmeister@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Api.ts",
-    "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Worker.ts",
+    "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Api.ts",
+    "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Worker.ts",
     "test": "jest",
     "build": "rm -rf ./dist && tsc",
-    "prod": "node ./dist/Infra/Api.js",
-    "prod-worker": "node ./dist/Infra/Worker.js"
+    "prod": "node ./dist/Api.js",
+    "prod-worker": "node ./dist/Worker.js"
   },
   "dependencies": {
     "amqplib": "^0.10.0",

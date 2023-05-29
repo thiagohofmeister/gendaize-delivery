@@ -7,18 +7,18 @@ import {
 } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
-import { EntityDataMapperContract } from '../../DataMappers/Contracts/EntityDataMapperContract'
+import { DaoModel } from '../../Models/DaoModel'
+import { DomainModel } from '../../Models/DomainModel'
 import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
 import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 import { RepositoryContract } from './RepositoryContract'
 
 export abstract class TypeOrmMysqlRepositoryContract<
-  TDomainEntity,
-  TDaoEntity
+  TDomainEntity extends DomainModel,
+  TDaoEntity extends DaoModel
 > extends RepositoryContract<TDomainEntity, TDaoEntity> {
   constructor(
     protected readonly repository: TypeOrmRepository<TDaoEntity>,
-    protected dataMapper: EntityDataMapperContract<TDomainEntity, TDaoEntity>,
     protected organizationId: string | null
   ) {
     super()
@@ -26,7 +26,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async create(entity: TDomainEntity): Promise<TDomainEntity> {
     const result = await this.repository.insert(
-      this.dataMapper.toDaoEntity(entity) as QueryDeepPartialEntity<TDaoEntity>
+      this.toDaoEntity(entity) as QueryDeepPartialEntity<TDaoEntity>
     )
 
     return this.findOneByPrimaryColumn(result.identifiers[0][this.getPrimaryColumnName()])
@@ -36,7 +36,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
     entity: TDomainEntity,
     withFindBeforeReturn: boolean = true
   ): Promise<TDomainEntity> {
-    await this.repository.save(this.repository.create(this.dataMapper.toDaoEntity(entity)))
+    await this.repository.save(this.repository.create(this.toDaoEntity(entity)))
 
     if (!withFindBeforeReturn) return entity
 
@@ -178,7 +178,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
     if (!entity) return null
 
-    return this.dataMapper.toDomainEntity(entity)
+    return this.toDomainEntity(entity)
   }
 
   protected async getMany(
@@ -186,14 +186,26 @@ export abstract class TypeOrmMysqlRepositoryContract<
   ): Promise<IItemListModel<TDomainEntity>> {
     if (query instanceof SelectQueryBuilder) {
       return {
-        items: this.dataMapper.toDomainEntityMany(await query.getMany()),
+        items: this.toDomainEntityMany(await query.getMany()),
         total: await query.getCount()
       }
     }
 
     return {
-      items: this.dataMapper.toDomainEntityMany(await this.repository.find(query)),
+      items: this.toDomainEntityMany(await this.repository.find(query)),
       total: await this.repository.count(query)
     }
+  }
+
+  protected toDomainEntity(entity: TDaoEntity): TDomainEntity {
+    return entity.toDomain()
+  }
+
+  protected toDomainEntityMany(entities: TDaoEntity[]): TDomainEntity[] {
+    return entities.map(entity => this.toDomainEntity(entity))
+  }
+
+  protected toDaoEntity(entity: TDomainEntity) {
+    return entity.toDao()
   }
 }

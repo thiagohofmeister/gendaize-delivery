@@ -1,13 +1,15 @@
 import { EntityManager } from 'typeorm'
 
-import { AuthenticationService } from '../../Domain/Authentication/AuthenticationService'
-import { EndpointPermissionsService } from '../../Domain/EndpointPermissions/EndpointPermissionsService'
-import { OrganizationService } from '../../Domain/Organization/OrganizationService'
-import { OrganizationValidator } from '../../Domain/Organization/OrganizationValidator'
-import { RegisterService } from '../../Domain/Register/RegisterService'
-import { RegisterValidator } from '../../Domain/Register/RegisterValidator'
-import { UserService } from '../../Domain/User/UserService'
-import { UserValidator } from '../../Domain/User/UserValidator'
+import { AuthenticationService } from '../../Authentication/AuthenticationService'
+import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
+import { OrganizationService } from '../../Organization/OrganizationService'
+import { OrganizationValidator } from '../../Organization/OrganizationValidator'
+import { ProductTypeService } from '../../ProductType/ProductTypeService'
+import { ProductTypeValidator } from '../../ProductType/ProductTypeValidator'
+import { RegisterService } from '../../Register/RegisterService'
+import { RegisterValidator } from '../../Register/RegisterValidator'
+import { UserService } from '../../User/UserService'
+import { UserValidator } from '../../User/UserValidator'
 import { JWT } from '../Modules/JWT'
 import { TransactionalService } from '../Services/TransactionalService'
 import { QueueFactory } from './QueueFactory'
@@ -49,6 +51,14 @@ export class ServiceFactory {
 
   public buildUserService(manager?: EntityManager) {
     return new UserService(this.repositoryFactory.buildUserRepository(manager), new UserValidator())
+  }
+
+  public buildProductTypeService(manager?: EntityManager) {
+    return new ProductTypeService(
+      this.repositoryFactory.buildProductTypeRepository(manager),
+
+      new ProductTypeValidator()
+    )
   }
 
   public buildTransactionalService() {
