@@ -1,6 +1,6 @@
 import { kebabCase } from 'lodash'
 
-import { BaseController } from '../../Controllers/BaseController'
+import { BaseController } from '../../BaseController'
 import { RouteDto } from '../../Dto/RouteDto'
 
 export abstract class RouteContract<T extends BaseController> {

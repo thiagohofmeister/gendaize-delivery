@@ -1,8 +1,8 @@
 import { FindOptionsWhere, ObjectID, SelectQueryBuilder } from 'typeorm'
 
-import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
-import { IRepository } from '../../Models/Interfaces/IRepository'
+import { IFilterDefault } from '../Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../Models/Interfaces/IItemListModel'
+import { IRepository } from '../Models/Interfaces/IRepository'
 
 export abstract class RepositoryContract<TDomainEntity, TDaoEntity>
   implements IRepository<TDomainEntity>

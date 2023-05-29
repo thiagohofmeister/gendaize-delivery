@@ -1,5 +1,5 @@
 import { Organization } from '../Organization/Models/Organization'
-import { FacadeContract } from '../Shared/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../Shared/Facades/FacadeContract'
 import { ProductTypeCreateDto } from './Dto/ProductTypeCreateDto'
 
 export class ProductTypeFacade extends FacadeContract {

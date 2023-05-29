@@ -1,4 +1,4 @@
-import { FacadeContract } from '../Shared/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../Shared/Facades/FacadeContract'
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 import { Organization } from './Models/Organization'
 

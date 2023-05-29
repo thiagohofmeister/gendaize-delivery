@@ -1,5 +1,5 @@
+import { HttpMethodEnum } from '../../Enums/HttpMethodEnum'
 import { ProviderResponse } from '../../Models/ProviderResponse'
-import { HttpMethod } from '../../Providers/Enum/HttpMethod'
 
 export abstract class BaseRequest<TInstance = any> {
   protected instance: TInstance
@@ -69,9 +69,7 @@ export abstract class BaseRequest<TInstance = any> {
     return this.payload
   }
 
-  public abstract send<T = any>(
-    method: HttpMethod
-  ): Promise<ProviderResponse<T>>
+  public abstract send<T = any>(method: HttpMethodEnum): Promise<ProviderResponse<T>>
 }
 
 export interface IParams {

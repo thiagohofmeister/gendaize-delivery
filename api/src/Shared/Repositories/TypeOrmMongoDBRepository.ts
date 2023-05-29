@@ -1,9 +1,9 @@
 import { FindManyOptions, MongoRepository, ObjectLiteral } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
-import { DaoModel } from '../../Models/DaoModel'
-import { DomainModel } from '../../Models/DomainModel'
-import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
+import { DaoModel } from '../Models/DaoModel'
+import { DomainModel } from '../Models/DomainModel'
+import { IFilterDefault } from '../Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../Models/Interfaces/IItemListModel'
 import { RepositoryContract } from './RepositoryContract'
 
 export abstract class TypeOrmMongoDBRepositoryContract<

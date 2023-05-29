@@ -1,7 +1,7 @@
-import { HttpMethod } from '../../Providers/Enum/HttpMethod'
-import { BaseRequest } from './BaseRequest'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { HttpMethodEnum } from '../../Enums/HttpMethodEnum'
 import { ProviderResponse } from '../../Models/ProviderResponse'
+import { BaseRequest } from './BaseRequest'
 
 export class AxiosRequest extends BaseRequest<AxiosInstance> {
   constructor(private baseURL: string) {
@@ -49,25 +49,20 @@ export class AxiosRequest extends BaseRequest<AxiosInstance> {
     return endpoint
   }
 
-  public async send<T = any>(method: HttpMethod): Promise<ProviderResponse<T>> {
+  public async send<T = any>(method: HttpMethodEnum): Promise<ProviderResponse<T>> {
     try {
       let response: AxiosResponse<T> = null
 
       switch (method) {
-        case HttpMethod.DELETE:
-        case HttpMethod.GET:
-          response = await this.instance[method.toLocaleLowerCase()](
-            this.getFullEndpoint()
-          )
+        case HttpMethodEnum.DELETE:
+        case HttpMethodEnum.GET:
+          response = await this.instance[method](this.getFullEndpoint())
           break
 
-        case HttpMethod.PATCH:
-        case HttpMethod.POST:
-        case HttpMethod.PUT:
-          response = await this.instance[method.toLocaleLowerCase()](
-            this.getFullEndpoint(),
-            this.getPayload()
-          )
+        case HttpMethodEnum.PATCH:
+        case HttpMethodEnum.POST:
+        case HttpMethodEnum.PUT:
+          response = await this.instance[method](this.getFullEndpoint(), this.getPayload())
           break
       }
 

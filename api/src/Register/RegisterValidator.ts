@@ -2,7 +2,7 @@ import * as Joi from 'joi'
 import { Schema } from 'joi'
 
 import { DocumentTypeEnum } from '../Organization/Enums/DocumentTypeEnum'
-import { JoiSchemaValidatorContract } from '../Shared/Validators/JoiSchemaValidatorContract'
+import { JoiSchemaValidatorContract } from '../Shared/JoiSchemaValidatorContract'
 import { RegisterCreateDto } from './Dto/RegisterCreateDto'
 
 export class RegisterValidator extends JoiSchemaValidatorContract {

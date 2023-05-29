@@ -1,4 +1,4 @@
-import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/TypeOrmMysqlRepositoryContract'
 import { Organization } from './Models/Organization'
 import { OrganizationDao } from './Models/OrganizationDao'
 

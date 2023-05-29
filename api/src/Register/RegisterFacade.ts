@@ -1,4 +1,4 @@
-import { FacadeContract } from '../Shared/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../Shared/Facades/FacadeContract'
 import { RegisterCreateDto } from './Dto/RegisterCreateDto'
 
 export class RegisterFacade extends FacadeContract {

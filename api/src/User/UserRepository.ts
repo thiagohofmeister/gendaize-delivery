@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 
-import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/TypeOrmMysqlRepositoryContract'
 import { User } from './Models/User'
 import { UserDao } from './Models/UserDao'
 

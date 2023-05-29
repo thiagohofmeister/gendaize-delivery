@@ -1,5 +1,5 @@
 import { Schema } from 'joi'
-import { InvalidDataException } from '../Models/Exceptions/InvalidDataException'
+import { InvalidDataException } from './Models/Exceptions/InvalidDataException'
 
 export class JoiSchemaValidatorContract {
   protected async validateBySchema<TBody>(body: TBody, schema: Schema) {

@@ -1,12 +1,12 @@
 import { NextFunction, Response } from 'express'
 
+import { HttpMethodEnum } from '../Enums/HttpMethodEnum'
 import { CoreRequest } from '../Models/Request/CoreRequest'
-import { MethodEnum } from '../Routes/Enums/MethodEnum'
 
 export class RouteDto {
   constructor(
     private readonly path: string,
-    private readonly method: MethodEnum,
+    private readonly method: HttpMethodEnum,
     private readonly handle: (request: CoreRequest, response: Response, next: NextFunction) => void
   ) {}
 

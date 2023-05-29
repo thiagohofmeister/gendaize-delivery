@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../Shared/Controllers/BaseController'
+import { BaseController } from '../Shared/BaseController'
 import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
 import { Factory } from '../Shared/Factories/Factory'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'

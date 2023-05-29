@@ -1,4 +1,4 @@
-import { FacadeContract } from '../Shared/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../Shared/Facades/FacadeContract'
 
 export class UserFacade extends FacadeContract {
   async getById(id: string) {

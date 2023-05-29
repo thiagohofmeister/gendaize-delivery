@@ -1,7 +1,7 @@
 import * as Joi from 'joi'
 import { Schema } from 'joi'
 
-import { JoiSchemaValidatorContract } from '../Shared/Validators/JoiSchemaValidatorContract'
+import { JoiSchemaValidatorContract } from '../Shared/JoiSchemaValidatorContract'
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 
 export class OrganizationValidator extends JoiSchemaValidatorContract {

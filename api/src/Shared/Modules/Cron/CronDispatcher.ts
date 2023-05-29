@@ -1,5 +1,5 @@
 import { CronTimeEnum } from './Enum/CronTimeEnum'
-import { RoutineContract } from './Routines/Contracts/RoutineContract'
+import { RoutineContract } from './Routines/RoutineContract'
 
 export class CronDispatcher {
   constructor() {}
