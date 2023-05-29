@@ -2,8 +2,8 @@ import { Organization } from '../Organization/Models/Organization'
 import { DataNotFoundException } from '../Shared/Models/Exceptions/DataNotFoundException'
 import { ProductTypeCreateDto } from './Dto/ProductTypeCreateDto'
 import { ProductType } from './Models/ProductType'
+import { ProductTypeRepository } from './ProductTypeRepository'
 import { ProductTypeValidator } from './ProductTypeValidator'
-import { ProductTypeRepository } from './Repositories/ProductTypeRepository'
 
 export class ProductTypeService {
   constructor(

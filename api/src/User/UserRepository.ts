@@ -1,8 +1,8 @@
 import { createHash } from 'crypto'
 
-import { TypeOrmMysqlRepositoryContract } from '../../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
-import { User } from '../Models/User'
-import { UserDao } from '../Models/UserDao'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
+import { User } from './Models/User'
+import { UserDao } from './Models/UserDao'
 
 export class UserRepository extends TypeOrmMysqlRepositoryContract<User, UserDao> {
   async findOneByAuthData(login: string, password: string): Promise<User> {

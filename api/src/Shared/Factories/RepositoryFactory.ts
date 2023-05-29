@@ -1,15 +1,15 @@
 import { DataSource, EntityManager } from 'typeorm'
 
+import { AuthenticationRepository } from '../../Authentication/AuthenticationRepository'
 import { AuthenticationDao } from '../../Authentication/Models/AuthenticationDao'
-import { AuthenticationRepository } from '../../Authentication/Repositories/AuthenticationRepository'
 import { OrganizationDao } from '../../Organization/Models/OrganizationDao'
-import { OrganizationRepository } from '../../Organization/Repositories/OrganizationRepository'
+import { OrganizationRepository } from '../../Organization/OrganizationRepository'
 import { ProductTypeDao } from '../../ProductType/Models/ProductTypeDao'
-import { ProductTypeRepository } from '../../ProductType/Repositories/ProductTypeRepository'
+import { ProductTypeRepository } from '../../ProductType/ProductTypeRepository'
 import { UserDao } from '../../User/Models/UserDao'
-import { UserRepository } from '../../User/Repositories/UserRepository'
+import { UserRepository } from '../../User/UserRepository'
 import { UserOrganizationDao } from '../../UserOrganization/Models/UserOrganizationDao'
-import { UserOrganizationRepository } from '../../UserOrganization/Repositories/UserOrganizationRepository'
+import { UserOrganizationRepository } from '../../UserOrganization/UserOrganizationRepository'
 
 export class RepositoryFactory {
   constructor(private readonly dataSource: DataSource, private readonly organizationId: string) {}

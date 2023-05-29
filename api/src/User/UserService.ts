@@ -8,7 +8,7 @@ import { UserCreateDto } from './Dto/UserCreateDto'
 import { UserRoleTypeEnum } from './Enums/UserRoleTypeEnum'
 import { UserDataNotFound } from './Exceptions/UserDataNotFound'
 import { User } from './Models/User'
-import { UserRepository } from './Repositories/UserRepository'
+import { UserRepository } from './UserRepository'
 import { UserValidator } from './UserValidator'
 
 export class UserService {

@@ -1,12 +1,12 @@
 import { JWT } from '../Shared/Modules/JWT'
 import { UserRoleTypeEnum } from '../User/Enums/UserRoleTypeEnum'
 import { UserService } from '../User/UserService'
-import { UserOrganizationRepository } from '../UserOrganization/Repositories/UserOrganizationRepository'
+import { UserOrganizationRepository } from '../UserOrganization/UserOrganizationRepository'
+import { AuthenticationRepository } from './AuthenticationRepository'
 import { AuthenticationCreateDto } from './Dto/AuthenticationCreateDto'
 import { AuthenticationTokenDto } from './Dto/AuthenticationTokenDto'
 import { AuthenticationStatusEnum } from './Enums/AuthenticationStatusEnum'
 import { Authentication } from './Models/Authentication'
-import { AuthenticationRepository } from './Repositories/AuthenticationRepository'
 
 export class AuthenticationService {
   constructor(

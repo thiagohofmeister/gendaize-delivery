@@ -1,6 +1,6 @@
-import { TypeOrmMysqlRepositoryContract } from '../../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
-import { UserOrganization } from '../Models/UserOrganization'
-import { UserOrganizationDao } from '../Models/UserOrganizationDao'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
+import { UserOrganization } from './Models/UserOrganization'
+import { UserOrganizationDao } from './Models/UserOrganizationDao'
 
 export class UserOrganizationRepository extends TypeOrmMysqlRepositoryContract<
   UserOrganization,

@@ -1,7 +1,7 @@
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 import { Organization } from './Models/Organization'
+import { OrganizationRepository } from './OrganizationRepository'
 import { OrganizationValidator } from './OrganizationValidator'
-import { OrganizationRepository } from './Repositories/OrganizationRepository'
 
 export class OrganizationService {
   constructor(
