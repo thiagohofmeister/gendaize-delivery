@@ -5,7 +5,6 @@ import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
 import { Factory } from '../Shared/Factories/Factory'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
 import { UserFacade } from './UserFacade'
-import { UserView } from './Views/UserView'
 
 export class UserController extends BaseController {
   constructor() {
@@ -20,10 +19,6 @@ export class UserController extends BaseController {
       this.getFacade(request).getById(request.context?.user?.id),
       ResponseTypeEnum.OK
     )
-  }
-
-  protected getView() {
-    return new UserView()
   }
 
   protected getFacade(request: CoreRequest): UserFacade {

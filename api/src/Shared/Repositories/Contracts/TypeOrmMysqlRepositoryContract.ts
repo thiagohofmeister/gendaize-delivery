@@ -168,8 +168,6 @@ export abstract class TypeOrmMysqlRepositoryContract<
   ): Promise<TDomainEntity> {
     let entity: TDaoEntity
 
-    console.log(typeof query)
-
     if (query instanceof SelectQueryBuilder) {
       entity = await query.getOne()
     } else {

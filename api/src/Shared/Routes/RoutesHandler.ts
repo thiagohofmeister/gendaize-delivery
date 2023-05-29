@@ -57,8 +57,6 @@ export class RoutesHandler {
 
       const Controller = require(files['controller'])[`${domainName}Controller`]
 
-      console.log({ Route, Controller })
-
       const route = new Route(new Controller())
 
       if (route instanceof AuthRouteContract) {

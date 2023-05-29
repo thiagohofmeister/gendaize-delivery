@@ -4,7 +4,6 @@ import { BaseController } from '../Shared/Controllers/BaseController'
 import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
 import { Factory } from '../Shared/Factories/Factory'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
-import { OrganizationView } from './Views/OrganizationView'
 
 export class OrganizationController extends BaseController {
   constructor() {
@@ -19,10 +18,6 @@ export class OrganizationController extends BaseController {
       this.getFacade(req).create(req.body),
       ResponseTypeEnum.CREATED
     )
-  }
-
-  protected getView() {
-    return new OrganizationView()
   }
 
   protected getFacade(req: CoreRequest) {

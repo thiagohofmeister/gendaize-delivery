@@ -137,6 +137,8 @@ export class AuthMiddleware {
     roleType: UserRoleTypeEnum,
     userPermissions
   ) {
+    console.log({ roleType })
+
     const servicePermissions = await new EndpointPermissionsService().get()
     const permissions =
       servicePermissions.find(sp => sp.getRoleType() === roleType)?.getPermissions() || []

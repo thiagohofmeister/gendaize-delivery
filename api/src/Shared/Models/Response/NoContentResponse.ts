@@ -1,7 +1,7 @@
 import { ResponseTypeEnum } from '../../Enums/ResponseTypeEnum'
 import { SuccessContract } from './SuccessContract'
 
-export class NoContentResponse<TBody> extends SuccessContract<TBody> {
+export class NoContentResponse extends SuccessContract {
   getStatus(): number {
     return ResponseTypeEnum.NO_CONTENT
   }

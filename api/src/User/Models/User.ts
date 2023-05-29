@@ -99,7 +99,7 @@ export class User implements ResponseModel, DomainModel {
   }
 
   toDao() {
-    return new UserDao(
+    const user = new UserDao(
       this.getId(),
       this.getName(),
       this.getDocumentNumber(),
@@ -107,5 +107,11 @@ export class User implements ResponseModel, DomainModel {
       this.getPassword(),
       this.getStatus()
     )
+
+    if (this.getAllOrganizations()) {
+      user.userOrganizations = this.getAllOrganizations().map(userOrg => userOrg.toDao())
+    }
+
+    return user
   }
 }

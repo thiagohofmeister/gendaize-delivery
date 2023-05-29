@@ -1,4 +1,8 @@
-import { IRepository } from '../../Shared/Models/Interfaces/IRepository'
+import { TypeOrmMysqlRepositoryContract } from '../../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { ProductType } from '../Models/ProductType'
+import { ProductTypeDao } from '../Models/ProductTypeDao'
 
-export interface ProductTypeRepository extends IRepository<ProductType> {}
+export class ProductTypeRepository extends TypeOrmMysqlRepositoryContract<
+  ProductType,
+  ProductTypeDao
+> {}

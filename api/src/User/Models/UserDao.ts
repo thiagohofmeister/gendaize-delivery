@@ -54,6 +54,19 @@ export class UserDao implements DaoModel {
   }
 
   toDomain() {
-    return new User(this.name, this.documentNumber, this.email, this.password, this.status, this.id)
+    const user = new User(
+      this.name,
+      this.documentNumber,
+      this.email,
+      this.password,
+      this.status,
+      this.id
+    )
+
+    if (this.userOrganizations) {
+      this.userOrganizations.map(usrOrg => user.addOrganization(usrOrg.toDomain()))
+    }
+
+    return user
   }
 }

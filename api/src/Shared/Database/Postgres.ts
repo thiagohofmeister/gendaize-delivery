@@ -1,20 +1,15 @@
-import * as path from 'path'
 import * as typeORM from 'typeorm'
 import { DataSource } from 'typeorm'
+import { Database } from './Database'
 
-export class Postgres {
+export class Postgres extends Database {
   private static dataSource: DataSource
-
-  constructor() {}
 
   public async createDataSource() {
     Postgres.dataSource = new typeORM.DataSource({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [
-        path.join(__dirname, '..', '..', 'Infra', 'Models', '*.ts'),
-        path.join(__dirname, '..', '..', 'Infra', 'Models', '*.js')
-      ],
+      entities: this.getEntities(),
       logging: true
     })
 

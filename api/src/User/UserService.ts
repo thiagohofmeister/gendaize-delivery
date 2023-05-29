@@ -47,7 +47,7 @@ export class UserService {
       new UserOrganization(
         UserRoleTypeEnum.MANAGER,
         UserOrganizationStatusEnum.ACTIVE,
-        user,
+        null,
         organization
       )
     )

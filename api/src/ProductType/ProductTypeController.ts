@@ -5,7 +5,6 @@ import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
 import { Factory } from '../Shared/Factories/Factory'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
 import { ProductTypeFacade } from './ProductTypeFacade'
-import { ProductTypeView } from './Views/ProductTypeView'
 
 export class ProductTypeController extends BaseController {
   constructor() {
@@ -20,10 +19,6 @@ export class ProductTypeController extends BaseController {
       this.getFacade(request).create(request.context.organization, request.body),
       ResponseTypeEnum.OK
     )
-  }
-
-  protected getView() {
-    return new ProductTypeView()
   }
 
   protected getFacade(request: CoreRequest): ProductTypeFacade {

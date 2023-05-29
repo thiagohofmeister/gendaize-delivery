@@ -5,7 +5,6 @@ import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
 import { Factory } from '../Shared/Factories/Factory'
 import { UnauthorizedException } from '../Shared/Models/Exceptions/UnauthorizedException'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
-import { AuthenticationView } from './Views/AuthenticationView'
 
 export class AuthenticationController extends BaseController {
   constructor() {
@@ -37,10 +36,6 @@ export class AuthenticationController extends BaseController {
       }),
       ResponseTypeEnum.CREATED
     )
-  }
-
-  protected getView() {
-    return new AuthenticationView()
   }
 
   protected getFacade(req: CoreRequest) {

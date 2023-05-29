@@ -8,7 +8,6 @@ import { NoContentResponse } from '../Models/Response/NoContentResponse'
 import { OkResponse } from '../Models/Response/OkResponse'
 import { SuccessContract } from '../Models/Response/SuccessContract'
 import { ResponseModel } from '../Models/ResponseModel'
-import { ViewContract } from '../Views/Contracts/ViewContract'
 
 export abstract class BaseController {
   constructor() {}
@@ -17,20 +16,12 @@ export abstract class BaseController {
     response: Response,
     next: NextFunction,
     promise: any,
-    responseType: ResponseTypeEnum,
-    view?: ViewContract<ResponseModel>
+    responseType: ResponseTypeEnum
   ): Promise<void> {
     try {
-      const body = await promise
+      const body: ResponseModel = await promise
 
-      if (!view) {
-        view = this.getView()
-      }
-
-      this.successResponseHandler(
-        this.buildSuccessResponse(responseType, view.render(body)),
-        response
-      )
+      this.successResponseHandler(this.buildSuccessResponse(responseType, body), response)
     } catch (error) {
       next(error)
     }
@@ -69,8 +60,6 @@ export abstract class BaseController {
         throw new Error(`Response type ${responseType} is not implemented.`)
     }
   }
-
-  protected abstract getView()
 
   protected abstract getFacade(request: CoreRequest)
 }

@@ -1,4 +1,8 @@
-import { IRepository } from '../../Shared/Models/Interfaces/IRepository'
+import { TypeOrmMysqlRepositoryContract } from '../../Shared/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { Authentication } from '../Models/Authentication'
+import { AuthenticationDao } from '../Models/AuthenticationDao'
 
-export interface AuthenticationRepository extends IRepository<Authentication> {}
+export class AuthenticationRepository extends TypeOrmMysqlRepositoryContract<
+  Authentication,
+  AuthenticationDao
+> {}
