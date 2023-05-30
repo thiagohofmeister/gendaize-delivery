@@ -22,7 +22,7 @@ export class Factory {
   }
 
   public buildService(domainName: string) {
-    const Service = require(PathUtils.getDomains()[domainName]['service'])[`${domainName}Service`]
+    const Service = require(PathUtils.getPathes()[domainName]['service'])[`${domainName}Service`]
 
     return new Service()
   }

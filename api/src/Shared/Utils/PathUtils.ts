@@ -2,12 +2,14 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 export class PathUtils {
-  private static domains
+  private static pathes
+
+  constructor() {}
 
   public static getEntities() {
-    return Object.keys(PathUtils.getDomains())
+    return PathUtils.getDomains()
       .map(domain => {
-        return PathUtils.getDomains()[domain].models?.dao
+        return PathUtils.getPathes()[domain].models?.dao
       })
       .filter(dao => !!dao)
   }
@@ -20,22 +22,47 @@ export class PathUtils {
   }
 
   public static getDomain(domainName: string) {
-    return this.getDomains()[domainName]
+    return this.getPathes()[domainName]
   }
 
   public static getRepository(domainName: string) {
+    const path = PathUtils.getDomain(domainName)['repository']
+
+    if (!path) return null
+
     return require(PathUtils.getDomain(domainName)['repository'])[`${domainName}Repository`]
   }
 
-  public static getDomains() {
-    if (!this.domains) {
-      this.fillDomains()
-    }
+  public static getRoute(domainName: string) {
+    const path = PathUtils.getDomain(domainName)['routes']
 
-    return this.domains
+    if (!path) return null
+
+    return require(PathUtils.getDomain(domainName)['routes'])[`${domainName}Routes`]
   }
 
-  private static fillDomains() {
+  public static getController(domainName: string) {
+    const path = PathUtils.getDomain(domainName)['controller']
+
+    if (!path) return null
+
+    return require(PathUtils.getDomain(domainName)['controller'])[`${domainName}Controller`]
+  }
+
+  public static getPathes() {
+    if (!this.pathes) {
+      this.fillPathes()
+    }
+
+    return this.pathes
+  }
+
+  public static getDomains() {
+    this.getPathes()
+    return Object.keys(this.pathes)
+  }
+
+  public static fillPathes() {
     const rootDir = path.join(__dirname, '..', '..')
     const domains = {}
 
@@ -82,6 +109,6 @@ export class PathUtils {
       domains[domainName] = { ...files }
     })
 
-    this.domains = domains
+    this.pathes = domains
   }
 }

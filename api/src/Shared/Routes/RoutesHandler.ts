@@ -1,10 +1,9 @@
 import { Router } from 'express'
-import * as fs from 'fs'
-import * as path from 'path'
 
 import { AuthMiddleware } from '../../Authentication/Middlewares/AuthMiddleware'
 import { BaseAuthRoute } from '../../Base/BaseAuthRoute'
 import { BaseRoute } from '../../Base/BaseRoute'
+import { PathUtils } from '../Utils/PathUtils'
 
 export class RoutesHandler {
   private authRoutes: BaseAuthRoute<any>[]
@@ -23,39 +22,12 @@ export class RoutesHandler {
   }
 
   private initializeRoutes() {
-    const rootDir = path.join(__dirname, '..', '..')
+    PathUtils.getDomains().forEach(domainName => {
+      const Route = PathUtils.getRoute(domainName)
 
-    const domainsPath = fs
-      .readdirSync(rootDir, { withFileTypes: true })
-      .filter(dir => dir.isDirectory() && dir.name !== 'Shared')
-      .map(dir => dir.name)
+      const Controller = PathUtils.getController(domainName)
 
-    domainsPath.forEach(domainName => {
-      const domainPath = path.join(rootDir, domainName)
-
-      const files = fs
-        .readdirSync(domainPath, { withFileTypes: true })
-        .filter(file => !file.isDirectory())
-        .map(file => file.name)
-        .reduce((prev, curr) => {
-          const slices = curr.split(/(?=[A-Z\.])/)
-          const type = slices[slices.length - 2]
-
-          prev = {
-            ...prev,
-            [type.toLocaleLowerCase()]: path.join(domainPath, slices.join(''))
-          }
-
-          return prev
-        }, {})
-
-      if (!fs.existsSync(files['controller']) || !fs.existsSync(files['routes'])) {
-        return
-      }
-
-      const Route = require(files['routes'])[`${domainName}Routes`]
-
-      const Controller = require(files['controller'])[`${domainName}Controller`]
+      if (!Route || !Controller) return
 
       const route = new Route(new Controller())
 
