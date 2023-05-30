@@ -20,6 +20,7 @@ export class ServiceFactory {
 
   public buildAuthenticationService() {
     return new AuthenticationService(
+      this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildAuthenticationRepository(),
       this.buildUserService(),
       this.repositoryFactory.buildUserOrganizationRepository(),
@@ -29,6 +30,7 @@ export class ServiceFactory {
 
   public buildOrganizationService() {
     return new OrganizationService(
+      this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildOrganizationRepository(),
       new OrganizationValidator()
     )
@@ -36,6 +38,7 @@ export class ServiceFactory {
 
   public buildRegisterService() {
     return new RegisterService(
+      this.repositoryFactory.getDataSource(),
       this.buildUserService(),
       this.buildOrganizationService(),
       new RegisterValidator()
@@ -43,11 +46,16 @@ export class ServiceFactory {
   }
 
   public buildUserService() {
-    return new UserService(this.repositoryFactory.buildUserRepository(), new UserValidator())
+    return new UserService(
+      this.repositoryFactory.getDataSource(),
+      this.repositoryFactory.buildUserRepository(),
+      new UserValidator()
+    )
   }
 
   public buildProductTypeService() {
     return new ProductTypeService(
+      this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildProductTypeRepository(),
       new ProductTypeValidator()
     )

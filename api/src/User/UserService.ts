@@ -1,4 +1,5 @@
 import { createHash } from 'crypto'
+import { DataSource, EntityManager } from 'typeorm'
 import { AuthenticationCreateDto } from '../Authentication/Dto/AuthenticationCreateDto'
 import { BaseService } from '../Base/BaseService'
 import { Organization } from '../Organization/Models/Organization'
@@ -14,10 +15,11 @@ import { UserValidator } from './UserValidator'
 
 export class UserService extends BaseService {
   constructor(
+    dataSource: DataSource,
     private readonly repository: UserRepository,
     private readonly validator: UserValidator
   ) {
-    super()
+    super(dataSource)
   }
 
   async getById(id: string) {
@@ -64,5 +66,10 @@ export class UserService extends BaseService {
 
   private createHash256(str: string): string {
     return createHash('sha256').update(str).digest('hex')
+  }
+
+  public setManager(manager: EntityManager) {
+    this.repository.setManager(manager)
+    return this
   }
 }

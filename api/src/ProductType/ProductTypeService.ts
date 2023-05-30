@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
 import { Organization } from '../Organization/Models/Organization'
 import { DataNotFoundException } from '../Shared/Models/Exceptions/DataNotFoundException'
@@ -8,10 +9,11 @@ import { ProductTypeValidator } from './ProductTypeValidator'
 
 export class ProductTypeService extends BaseService {
   constructor(
+    dataSource: DataSource,
     private readonly repository: ProductTypeRepository,
     private readonly validator: ProductTypeValidator
   ) {
-    super()
+    super(dataSource)
   }
 
   async getById(id: string) {

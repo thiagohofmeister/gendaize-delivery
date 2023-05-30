@@ -13,7 +13,7 @@ export class Factory {
   }
 
   public buildRepositoryFactory(organizationId: string) {
-    return new RepositoryFactory(Postgres.getDataSource().manager, organizationId)
+    return new RepositoryFactory(Postgres.getDataSource(), organizationId)
   }
 
   public async buildServiceFactory(organizationId: string) {

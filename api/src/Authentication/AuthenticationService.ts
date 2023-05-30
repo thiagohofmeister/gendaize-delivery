@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
 import { JWT } from '../Shared/Modules/JWT'
 import { UserRoleTypeEnum } from '../User/Enums/UserRoleTypeEnum'
@@ -11,12 +12,13 @@ import { Authentication } from './Models/Authentication'
 
 export class AuthenticationService extends BaseService {
   constructor(
+    dataSource: DataSource,
     private readonly authenticationRepository: AuthenticationRepository,
     private readonly userService: UserService,
     private readonly userOrganizationRepository: UserOrganizationRepository,
     private readonly jwt: JWT
   ) {
-    super()
+    super(dataSource)
   }
 
   async create(data: AuthenticationCreateDto) {

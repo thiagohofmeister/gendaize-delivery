@@ -1,3 +1,4 @@
+import { DataSource, EntityManager } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 import { Organization } from './Models/Organization'
@@ -6,10 +7,11 @@ import { OrganizationValidator } from './OrganizationValidator'
 
 export class OrganizationService extends BaseService {
   constructor(
+    dataSource: DataSource,
     private readonly repository: OrganizationRepository,
     private readonly validator: OrganizationValidator
   ) {
-    super()
+    super(dataSource)
   }
 
   public async create(data: OrganizationCreateDto): Promise<Organization> {
@@ -29,5 +31,10 @@ export class OrganizationService extends BaseService {
 
   public async findOneByDocumentNumber(documentNumber: string): Promise<Organization> {
     return this.repository.findOneByDocumentNumber(documentNumber)
+  }
+
+  public setManager(manager: EntityManager) {
+    this.repository.setManager(manager)
+    return this
   }
 }
