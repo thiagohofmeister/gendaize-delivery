@@ -1,10 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
-import { BadRequestException } from '../Models/Exceptions/BadRequestException'
+import { NextFunction, Request, Response } from 'express'
+import { ResponseTypeEnum } from '../../Base/Enums/ResponseTypeEnum'
 import { BaseError } from '../Models/Exceptions/BaseError'
-import { ConflictException } from '../Models/Exceptions/ConflictException'
 import { DataNotFoundException } from '../Models/Exceptions/DataNotFoundException'
-import { InvalidDataException } from '../Models/Exceptions/InvalidDataException'
-import { UnauthorizedException } from '../Models/Exceptions/UnauthorizedException'
 
 export class ErrorHandler {
   constructor() {
@@ -16,30 +13,21 @@ export class ErrorHandler {
 
   public notFound(request: Request, response: Response, next: NextFunction) {
     return this.error(
-      new DataNotFoundException('Resource not found.').setCode(
-        'resourceNotFound'
-      ),
+      new DataNotFoundException('Resource not found.').setCode('resourceNotFound'),
       request,
       response,
       next
     )
   }
 
-  public error(
-    error: Error,
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
+  public error(error: Error, request: Request, response: Response, next: NextFunction) {
     let httpStatusCode = this.getHttpStatusCode(error)
 
     if (httpStatusCode === 500) {
       console.error(error)
     }
 
-    response
-      .status(httpStatusCode)
-      .json(this.getResponseBody(error, httpStatusCode))
+    response.status(httpStatusCode).json(this.getResponseBody(error, httpStatusCode))
   }
 
   private getResponseBody(error: Error, httpStatusCode: number) {
@@ -58,27 +46,11 @@ export class ErrorHandler {
     }
   }
 
-  private getHttpStatusCode(error: Error): number {
-    if (error instanceof UnauthorizedException) {
-      return 401
+  private getHttpStatusCode(error: Error): ResponseTypeEnum {
+    if (error instanceof BaseError) {
+      return error.getHttpStatusCode()
     }
 
-    if (error instanceof DataNotFoundException) {
-      return 404
-    }
-
-    if (error instanceof InvalidDataException) {
-      return 422
-    }
-
-    if (error instanceof ConflictException) {
-      return 409
-    }
-
-    if (error instanceof BadRequestException) {
-      return 400
-    }
-
-    return 500
+    return ResponseTypeEnum.INTERNAL_SERVER_ERROR
   }
 }

@@ -1,13 +1,13 @@
 import { NextFunction, Response } from 'express'
 import * as jwt from 'jsonwebtoken'
 
-import { AuthenticationDao } from '../../Authentication/Models/AuthenticationDao'
+import { Postgres } from '../../Database/Postgres'
 import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
 import { OrganizationDao } from '../../Organization/Models/OrganizationDao'
+import { CoreRequest } from '../../Shared/Models/Request/CoreRequest'
 import { AuthenticationTokenDto } from '../../User/Dto/AuthenticationTokenDto'
 import { UserRoleTypeEnum } from '../../User/Enums/UserRoleTypeEnum'
-import { Postgres } from '../Database/Postgres'
-import { CoreRequest } from '../Models/Request/CoreRequest'
+import { AuthenticationDao } from '../Models/AuthenticationDao'
 
 export class AuthMiddleware {
   public constructor() {

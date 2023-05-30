@@ -1,10 +1,10 @@
 import * as Joi from 'joi'
 import { Schema } from 'joi'
 
-import { JoiSchemaValidatorContract } from '../Shared/JoiSchemaValidatorContract'
+import { BaseValidator } from '../Base/BaseValidator'
 import { UserCreateDto } from './Dto/UserCreateDto'
 
-export class UserValidator extends JoiSchemaValidatorContract {
+export class UserValidator extends BaseValidator {
   private userCreateSchema: Schema
 
   constructor() {

@@ -1,4 +1,4 @@
-import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/TypeOrmMysqlRepositoryContract'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Modules/Repositories/TypeOrmMysqlRepositoryContract'
 import { Organization } from './Models/Organization'
 import { OrganizationDao } from './Models/OrganizationDao'
 
@@ -8,5 +8,9 @@ export class OrganizationRepository extends TypeOrmMysqlRepositoryContract<
 > {
   async findOneByDocumentNumber(documentNumber: string): Promise<Organization> {
     return this.getOne({ where: { documentNumber } })
+  }
+
+  getRepository() {
+    return this.getManager().getRepository(OrganizationDao)
   }
 }

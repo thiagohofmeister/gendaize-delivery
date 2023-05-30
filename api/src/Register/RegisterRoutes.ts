@@ -1,9 +1,9 @@
-import { RouteDto } from '../Shared/Dto/RouteDto'
-import { HttpMethodEnum } from '../Shared/Enums/HttpMethodEnum'
-import { RouteContract } from '../Shared/Routes/Contracts/RouteContract'
+import { BaseRoute } from '../Base/BaseRoute'
+import { RouteDto } from '../Base/Dto/RouteDto'
+import { HttpMethodEnum } from '../Base/Enums/HttpMethodEnum'
 import { RegisterController } from './RegisterController'
 
-export class RegisterRoutes extends RouteContract<RegisterController> {
+export class RegisterRoutes extends BaseRoute<RegisterController> {
   getRoutes(): RouteDto[] {
     const controller = this.getController()
 

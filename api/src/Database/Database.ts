@@ -3,16 +3,20 @@ import * as path from 'path'
 
 export abstract class Database {
   protected getEntities() {
-    const rootDir = path.join(__dirname, '..', '..')
+    const rootDir = path.join(__dirname, '..')
     const entities = []
 
     const domainsPath = fs
       .readdirSync(rootDir, { withFileTypes: true })
-      .filter(dir => dir.isDirectory() && dir.name !== 'Shared')
+      .filter(dir => dir.isDirectory())
       .map(dir => dir.name)
 
     domainsPath.forEach(domainName => {
       const domainPath = path.join(rootDir, domainName, 'Models')
+
+      if (!fs.existsSync(domainPath)) {
+        return
+      }
 
       const files = fs
         .readdirSync(domainPath, { withFileTypes: true })

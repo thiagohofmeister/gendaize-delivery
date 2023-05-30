@@ -1,13 +1,16 @@
+import { BaseService } from '../Base/BaseService'
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 import { Organization } from './Models/Organization'
 import { OrganizationRepository } from './OrganizationRepository'
 import { OrganizationValidator } from './OrganizationValidator'
 
-export class OrganizationService {
+export class OrganizationService extends BaseService {
   constructor(
     private readonly repository: OrganizationRepository,
     private readonly validator: OrganizationValidator
-  ) {}
+  ) {
+    super()
+  }
 
   public async create(data: OrganizationCreateDto): Promise<Organization> {
     await this.validator.organizationCreatePayloadValidate(data)

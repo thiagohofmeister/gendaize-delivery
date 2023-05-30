@@ -1,9 +1,9 @@
 import { kebabCase } from 'lodash'
 
-import { BaseController } from '../../BaseController'
-import { RouteDto } from '../../Dto/RouteDto'
+import { BaseController } from './BaseController'
+import { RouteDto } from './Dto/RouteDto'
 
-export abstract class RouteContract<T extends BaseController> {
+export abstract class BaseRoute<T extends BaseController> {
   protected readonly basePath: string
 
   constructor(protected readonly controller: T) {

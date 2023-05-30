@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv'
-import { Postgres } from './Shared/Database/Postgres'
+import { Postgres } from './Database/Postgres'
 import { Factory } from './Shared/Factories/Factory'
 import { QueueFactory } from './Shared/Factories/QueueFactory'
 

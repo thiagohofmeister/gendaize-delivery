@@ -1,3 +1,4 @@
+import { BaseService } from '../Base/BaseService'
 import { OrganizationService } from '../Organization/OrganizationService'
 import { InvalidDataException } from '../Shared/Models/Exceptions/InvalidDataException'
 import { UserService } from '../User/UserService'
@@ -5,12 +6,14 @@ import { RegisterCreateDto } from './Dto/RegisterCreateDto'
 import { Register } from './Models/Register'
 import { RegisterValidator } from './RegisterValidator'
 
-export class RegisterService {
+export class RegisterService extends BaseService {
   constructor(
     private readonly userService: UserService,
     private readonly organizationService: OrganizationService,
     private readonly validator: RegisterValidator
-  ) {}
+  ) {
+    super()
+  }
 
   public async create(data: RegisterCreateDto) {
     await this.validator.registerCreatePayloadValidate(data)

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { HttpMethodEnum } from '../../Enums/HttpMethodEnum'
+import { HttpMethodEnum } from '../../../Base/Enums/HttpMethodEnum'
 import { ProviderResponse } from '../../Models/ProviderResponse'
 import { BaseRequest } from './BaseRequest'
 

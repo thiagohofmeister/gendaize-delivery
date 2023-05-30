@@ -1,7 +1,7 @@
-import { BaseError } from "./BaseError";
+import { NotFoundException } from './NotFoundException'
 
-export class DataNotFoundException extends BaseError {
-  constructor(message: string = "Item not found.") {
-    super(message);
+export class DataNotFoundException extends NotFoundException {
+  constructor(message: string = 'Item not found.') {
+    super(message)
   }
 }

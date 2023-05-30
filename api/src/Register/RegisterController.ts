@@ -1,8 +1,7 @@
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../Shared/BaseController'
-import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
-import { Factory } from '../Shared/Factories/Factory'
+import { BaseController } from '../Base/BaseController'
+import { ResponseTypeEnum } from '../Base/Enums/ResponseTypeEnum'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
 
 export class RegisterController extends BaseController {
@@ -15,14 +14,8 @@ export class RegisterController extends BaseController {
     await this.responseHandler(
       res,
       next,
-      this.getFacade(req).create(req.body),
+      (await this.getServiceFactory(req)).buildRegisterService().create(req.body),
       ResponseTypeEnum.CREATED
     )
-  }
-
-  protected getFacade(req: CoreRequest) {
-    return Factory.getInstance()
-      .buildFacadeFactory(req.context?.organizationId)
-      .buildRegisterFacade()
   }
 }

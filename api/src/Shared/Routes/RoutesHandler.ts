@@ -2,13 +2,13 @@ import { Router } from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { AuthMiddleware } from '../Middlewares/AuthMiddleware'
-import { AuthRouteContract } from './Contracts/AuthRouteContract'
-import { RouteContract } from './Contracts/RouteContract'
+import { AuthMiddleware } from '../../Authentication/Middlewares/AuthMiddleware'
+import { BaseAuthRoute } from '../../Base/BaseAuthRoute'
+import { BaseRoute } from '../../Base/BaseRoute'
 
 export class RoutesHandler {
-  private authRoutes: AuthRouteContract<any>[]
-  private noAuthRoutes: RouteContract<any>[]
+  private authRoutes: BaseAuthRoute<any>[]
+  private noAuthRoutes: BaseRoute<any>[]
 
   constructor() {
     this.initializeRoutes = this.initializeRoutes.bind(this)
@@ -59,7 +59,7 @@ export class RoutesHandler {
 
       const route = new Route(new Controller())
 
-      if (route instanceof AuthRouteContract) {
+      if (route instanceof BaseAuthRoute) {
         this.authRoutes.push(route)
         return
       }

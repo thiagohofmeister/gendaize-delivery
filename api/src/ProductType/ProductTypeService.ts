@@ -1,3 +1,4 @@
+import { BaseService } from '../Base/BaseService'
 import { Organization } from '../Organization/Models/Organization'
 import { DataNotFoundException } from '../Shared/Models/Exceptions/DataNotFoundException'
 import { ProductTypeCreateDto } from './Dto/ProductTypeCreateDto'
@@ -5,11 +6,13 @@ import { ProductType } from './Models/ProductType'
 import { ProductTypeRepository } from './ProductTypeRepository'
 import { ProductTypeValidator } from './ProductTypeValidator'
 
-export class ProductTypeService {
+export class ProductTypeService extends BaseService {
   constructor(
     private readonly repository: ProductTypeRepository,
     private readonly validator: ProductTypeValidator
-  ) {}
+  ) {
+    super()
+  }
 
   async getById(id: string) {
     const result = await this.repository.findOneByPrimaryColumn(id)

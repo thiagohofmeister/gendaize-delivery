@@ -1,13 +1,14 @@
 import { NextFunction, Response } from 'express'
 
+import { Factory } from '../Shared/Factories/Factory'
+import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
+import { AcceptedResponse } from '../Shared/Models/Response/AcceptedResponse'
+import { CreatedResponse } from '../Shared/Models/Response/CreatedResponse'
+import { NoContentResponse } from '../Shared/Models/Response/NoContentResponse'
+import { OkResponse } from '../Shared/Models/Response/OkResponse'
+import { SuccessContract } from '../Shared/Models/Response/SuccessContract'
+import { ResponseModel } from '../Shared/Models/ResponseModel'
 import { ResponseTypeEnum } from './Enums/ResponseTypeEnum'
-import { CoreRequest } from './Models/Request/CoreRequest'
-import { AcceptedResponse } from './Models/Response/AcceptedResponse'
-import { CreatedResponse } from './Models/Response/CreatedResponse'
-import { NoContentResponse } from './Models/Response/NoContentResponse'
-import { OkResponse } from './Models/Response/OkResponse'
-import { SuccessContract } from './Models/Response/SuccessContract'
-import { ResponseModel } from './Models/ResponseModel'
 
 export abstract class BaseController {
   constructor() {}
@@ -61,5 +62,7 @@ export abstract class BaseController {
     }
   }
 
-  protected abstract getFacade(request: CoreRequest)
+  protected getServiceFactory(request: CoreRequest) {
+    return Factory.getInstance().buildServiceFactory(request.context?.organizationId)
+  }
 }

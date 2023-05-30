@@ -1,9 +1,9 @@
-import { RouteDto } from '../Shared/Dto/RouteDto'
-import { HttpMethodEnum } from '../Shared/Enums/HttpMethodEnum'
-import { RouteContract } from '../Shared/Routes/Contracts/RouteContract'
+import { BaseRoute } from '../Base/BaseRoute'
+import { RouteDto } from '../Base/Dto/RouteDto'
+import { HttpMethodEnum } from '../Base/Enums/HttpMethodEnum'
 import { AuthenticationController } from './AuthenticationController'
 
-export class AuthenticationRoutes extends RouteContract<AuthenticationController> {
+export class AuthenticationRoutes extends BaseRoute<AuthenticationController> {
   getRoutes(): RouteDto[] {
     const controller = this.getController()
 

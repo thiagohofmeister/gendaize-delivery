@@ -1,17 +1,20 @@
-import { FindManyOptions, MongoRepository, ObjectLiteral } from 'typeorm'
+import { EntityManager, FindManyOptions, MongoRepository, ObjectLiteral } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
-import { DaoModel } from '../Models/DaoModel'
-import { DomainModel } from '../Models/DomainModel'
-import { IFilterDefault } from '../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../Models/Interfaces/IItemListModel'
-import { RepositoryContract } from './RepositoryContract'
+import { BaseRepository } from '../../../Base/BaseRepository'
+import { DaoModel } from '../../Models/DaoModel'
+import { DomainModel } from '../../Models/DomainModel'
+import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 
 export abstract class TypeOrmMongoDBRepositoryContract<
   TDomainEntity extends DomainModel,
   TDaoEntity extends DaoModel
-> extends RepositoryContract<TDomainEntity, null> {
-  public constructor(protected readonly repository: MongoRepository<TDaoEntity>) {
-    super()
+> extends BaseRepository<TDomainEntity, null> {
+  public constructor(
+    manager: EntityManager,
+    protected readonly repository: MongoRepository<TDaoEntity>
+  ) {
+    super(manager)
     this.repository = repository
   }
 

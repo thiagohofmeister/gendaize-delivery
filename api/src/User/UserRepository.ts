@@ -1,12 +1,12 @@
 import { createHash } from 'crypto'
 
-import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/TypeOrmMysqlRepositoryContract'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Modules/Repositories/TypeOrmMysqlRepositoryContract'
 import { User } from './Models/User'
 import { UserDao } from './Models/UserDao'
 
 export class UserRepository extends TypeOrmMysqlRepositoryContract<User, UserDao> {
   async findOneByAuthData(login: string, password: string): Promise<User> {
-    const query = await this.repository
+    const query = await this.getRepository()
       .createQueryBuilder()
       .innerJoinAndSelect('UserDao.userOrganizations', 'userOrganizations')
       .innerJoinAndSelect('userOrganizations.organization', 'organization')
@@ -24,5 +24,9 @@ export class UserRepository extends TypeOrmMysqlRepositoryContract<User, UserDao
 
   private createHash256(str: string): string {
     return createHash('sha256').update(str).digest('hex')
+  }
+
+  getRepository() {
+    return this.getManager().getRepository(UserDao)
   }
 }

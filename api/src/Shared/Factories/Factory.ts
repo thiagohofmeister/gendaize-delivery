@@ -1,7 +1,5 @@
-import { Postgres } from '../Database/Postgres'
-import { FacadeFactory } from './FacadeFactory'
+import { Postgres } from '../../Database/Postgres'
 import { ProviderFactory } from './ProviderFactory'
-import { QueueFactory } from './QueueFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 import { ServiceFactory } from './ServiceFactory'
 
@@ -10,24 +8,16 @@ export class Factory {
 
   private constructor() {}
 
-  public buildFacadeFactory(organizationId: string) {
-    return new FacadeFactory(this.buildServiceFactory(organizationId))
-  }
-
   public buildProviderFactory() {
     return new ProviderFactory()
   }
 
   public buildRepositoryFactory(organizationId: string) {
-    return new RepositoryFactory(Postgres.getDataSource(), organizationId)
+    return new RepositoryFactory(Postgres.getDataSource().manager, organizationId)
   }
 
-  public buildServiceFactory(organizationId: string) {
-    return new ServiceFactory(this.buildRepositoryFactory(organizationId), this.buildQueueFactory())
-  }
-
-  public buildQueueFactory() {
-    return new QueueFactory(process.env.QUEUE_URL)
+  public async buildServiceFactory(organizationId: string) {
+    return new ServiceFactory(await this.buildRepositoryFactory(organizationId))
   }
 
   public static getInstance() {

@@ -1,4 +1,4 @@
-import { ResponseTypeEnum } from '../../Enums/ResponseTypeEnum'
+import { ResponseTypeEnum } from '../../../Base/Enums/ResponseTypeEnum'
 import { SuccessContract } from './SuccessContract'
 
 export class OkResponse extends SuccessContract {

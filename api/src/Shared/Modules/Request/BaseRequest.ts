@@ -1,4 +1,4 @@
-import { HttpMethodEnum } from '../../Enums/HttpMethodEnum'
+import { HttpMethodEnum } from '../../../Base/Enums/HttpMethodEnum'
 import { ProviderResponse } from '../../Models/ProviderResponse'
 
 export abstract class BaseRequest<TInstance = any> {

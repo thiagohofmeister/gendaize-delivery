@@ -2,7 +2,7 @@ import * as cors from 'cors'
 import * as dotenv from 'dotenv'
 import * as express from 'express'
 
-import { Postgres } from './Shared/Database/Postgres'
+import { Postgres } from './Database/Postgres'
 import { ErrorHandler } from './Shared/Middlewares/ErrorHandler'
 import { RoutesHandler } from './Shared/Routes/RoutesHandler'
 

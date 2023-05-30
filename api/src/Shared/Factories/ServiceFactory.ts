@@ -1,5 +1,3 @@
-import { EntityManager } from 'typeorm'
-
 import { AuthenticationService } from '../../Authentication/AuthenticationService'
 import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
 import { OrganizationService } from '../../Organization/OrganizationService'
@@ -11,57 +9,47 @@ import { RegisterValidator } from '../../Register/RegisterValidator'
 import { UserService } from '../../User/UserService'
 import { UserValidator } from '../../User/UserValidator'
 import { JWT } from '../Modules/JWT'
-import { TransactionalService } from '../Services/TransactionalService'
-import { QueueFactory } from './QueueFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
-  constructor(
-    private readonly repositoryFactory: RepositoryFactory,
-    private readonly queueFactory: QueueFactory
-  ) {}
+  constructor(private readonly repositoryFactory: RepositoryFactory) {}
 
   public buildEndpointPermissionsService() {
     return new EndpointPermissionsService()
   }
 
-  public buildAuthenticationService(manager?: EntityManager) {
+  public buildAuthenticationService() {
     return new AuthenticationService(
-      this.repositoryFactory.buildAuthenticationRepository(manager),
-      this.buildUserService(manager),
-      this.repositoryFactory.buildUserOrganizationRepository(manager),
+      this.repositoryFactory.buildAuthenticationRepository(),
+      this.buildUserService(),
+      this.repositoryFactory.buildUserOrganizationRepository(),
       new JWT(process.env.JWT_KEY)
     )
   }
 
-  public buildOrganizationService(manager?: EntityManager) {
+  public buildOrganizationService() {
     return new OrganizationService(
-      this.repositoryFactory.buildOrganizationRepository(manager),
+      this.repositoryFactory.buildOrganizationRepository(),
       new OrganizationValidator()
     )
   }
 
-  public buildRegisterService(manager?: EntityManager) {
+  public buildRegisterService() {
     return new RegisterService(
-      this.buildUserService(manager),
-      this.buildOrganizationService(manager),
+      this.buildUserService(),
+      this.buildOrganizationService(),
       new RegisterValidator()
     )
   }
 
-  public buildUserService(manager?: EntityManager) {
-    return new UserService(this.repositoryFactory.buildUserRepository(manager), new UserValidator())
+  public buildUserService() {
+    return new UserService(this.repositoryFactory.buildUserRepository(), new UserValidator())
   }
 
-  public buildProductTypeService(manager?: EntityManager) {
+  public buildProductTypeService() {
     return new ProductTypeService(
-      this.repositoryFactory.buildProductTypeRepository(manager),
-
+      this.repositoryFactory.buildProductTypeRepository(),
       new ProductTypeValidator()
     )
-  }
-
-  public buildTransactionalService() {
-    return new TransactionalService(this.repositoryFactory.getDataSource())
   }
 }

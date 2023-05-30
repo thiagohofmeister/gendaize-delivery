@@ -1,5 +1,6 @@
 import { createHash } from 'crypto'
 import { AuthenticationCreateDto } from '../Authentication/Dto/AuthenticationCreateDto'
+import { BaseService } from '../Base/BaseService'
 import { Organization } from '../Organization/Models/Organization'
 import { UnauthorizedException } from '../Shared/Models/Exceptions/UnauthorizedException'
 import { UserOrganizationStatusEnum } from '../UserOrganization/Enums/UserOrganizationStatusEnum'
@@ -11,11 +12,13 @@ import { User } from './Models/User'
 import { UserRepository } from './UserRepository'
 import { UserValidator } from './UserValidator'
 
-export class UserService {
+export class UserService extends BaseService {
   constructor(
     private readonly repository: UserRepository,
     private readonly validator: UserValidator
-  ) {}
+  ) {
+    super()
+  }
 
   async getById(id: string) {
     const result = await this.repository.findOneByPrimaryColumn(id)

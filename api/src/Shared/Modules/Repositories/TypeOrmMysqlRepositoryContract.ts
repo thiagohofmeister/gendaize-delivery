@@ -1,31 +1,28 @@
 import {
+  EntityManager,
   FindOneOptions,
   FindOptionsWhere,
   ObjectID,
-  SelectQueryBuilder,
-  Repository as TypeOrmRepository
+  SelectQueryBuilder
 } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
-import { DaoModel } from '../Models/DaoModel'
-import { DomainModel } from '../Models/DomainModel'
-import { IFilterDefault } from '../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../Models/Interfaces/IItemListModel'
-import { RepositoryContract } from './RepositoryContract'
+import { BaseRepository } from '../../../Base/BaseRepository'
+import { DaoModel } from '../../Models/DaoModel'
+import { DomainModel } from '../../Models/DomainModel'
+import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 
 export abstract class TypeOrmMysqlRepositoryContract<
   TDomainEntity extends DomainModel,
   TDaoEntity extends DaoModel
-> extends RepositoryContract<TDomainEntity, TDaoEntity> {
-  constructor(
-    protected readonly repository: TypeOrmRepository<TDaoEntity>,
-    protected organizationId: string | null
-  ) {
-    super()
+> extends BaseRepository<TDomainEntity, TDaoEntity> {
+  constructor(manager: EntityManager, protected organizationId: string | null) {
+    super(manager)
   }
 
   public async create(entity: TDomainEntity): Promise<TDomainEntity> {
-    const result = await this.repository.insert(
+    const result = await this.getRepository().insert(
       this.toDaoEntity(entity) as QueryDeepPartialEntity<TDaoEntity>
     )
 
@@ -36,7 +33,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
     entity: TDomainEntity,
     withFindBeforeReturn: boolean = true
   ): Promise<TDomainEntity> {
-    await this.repository.save(this.repository.create(this.toDaoEntity(entity)))
+    await this.getRepository().save(this.getRepository().create(this.toDaoEntity(entity)))
 
     if (!withFindBeforeReturn) return entity
 
@@ -55,7 +52,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
       | ObjectID[]
       | FindOptionsWhere<TDaoEntity>
   ): Promise<boolean> {
-    await this.repository.delete(criteria)
+    await this.getRepository().delete(criteria)
 
     return true
   }
@@ -66,7 +63,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
   ): Promise<IItemListModel<TDomainEntity>> {
     const query = this.applyPaginator(
       filter,
-      this.customToFindAll(this.repository.createQueryBuilder(), filter)
+      this.customToFindAll(this.getRepository().createQueryBuilder(), filter)
     )
 
     if (this.hasColumn('organizationId') && !bypassorganizationId) {
@@ -83,7 +80,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
     bypassorganizationId: boolean = false
   ): Promise<TDomainEntity> {
     const query = this.customToFindOneByPrimaryColumn(
-      this.repository
+      this.getRepository()
         .createQueryBuilder()
         .where(`${this.getTableName()}.${this.getPrimaryColumnName()} = :value`, { value })
     )
@@ -142,21 +139,23 @@ export abstract class TypeOrmMysqlRepositoryContract<
   }
 
   protected hasColumn(columnName: string): boolean {
-    return this.repository.metadata.columns.map(column => column.propertyName).includes(columnName)
+    return this.getRepository()
+      .metadata.columns.map(column => column.propertyName)
+      .includes(columnName)
   }
 
   protected hasRelation(propertyName: string): boolean {
-    return this.repository.metadata.relations
-      .map(relation => relation.propertyName)
+    return this.getRepository()
+      .metadata.relations.map(relation => relation.propertyName)
       .includes(propertyName)
   }
 
   protected getTableName(): string {
-    return this.repository.metadata.targetName
+    return this.getRepository().metadata.targetName
   }
 
   protected getPrimaryColumnName(): string {
-    return this.repository.metadata.primaryColumns[0].propertyAliasName
+    return this.getRepository().metadata.primaryColumns[0].propertyAliasName
   }
 
   protected getPrimaryColumnValueByEntity(entity: TDomainEntity): string {
@@ -171,7 +170,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
     if (query instanceof SelectQueryBuilder) {
       entity = await query.getOne()
     } else {
-      entity = await this.repository.findOne(query)
+      entity = await this.getRepository().findOne(query)
     }
 
     if (!entity) return null
@@ -190,8 +189,8 @@ export abstract class TypeOrmMysqlRepositoryContract<
     }
 
     return {
-      items: this.toDomainEntityMany(await this.repository.find(query)),
-      total: await this.repository.count(query)
+      items: this.toDomainEntityMany(await this.getRepository().find(query)),
+      total: await this.getRepository().count(query)
     }
   }
 

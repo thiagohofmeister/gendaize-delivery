@@ -1,4 +1,4 @@
-import { TypeOrmMysqlRepositoryContract } from '../Shared/Repositories/TypeOrmMysqlRepositoryContract'
+import { TypeOrmMysqlRepositoryContract } from '../Shared/Modules/Repositories/TypeOrmMysqlRepositoryContract'
 import { UserOrganization } from './Models/UserOrganization'
 import { UserOrganizationDao } from './Models/UserOrganizationDao'
 
@@ -18,5 +18,9 @@ export class UserOrganizationRepository extends TypeOrmMysqlRepositoryContract<
         }
       })
     ).items
+  }
+
+  getRepository() {
+    return this.getManager().getRepository(UserOrganizationDao)
   }
 }

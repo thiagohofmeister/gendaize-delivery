@@ -1,11 +1,11 @@
 import * as Joi from 'joi'
 import { Schema } from 'joi'
 
+import { BaseValidator } from '../Base/BaseValidator'
 import { DocumentTypeEnum } from '../Organization/Enums/DocumentTypeEnum'
-import { JoiSchemaValidatorContract } from '../Shared/JoiSchemaValidatorContract'
 import { RegisterCreateDto } from './Dto/RegisterCreateDto'
 
-export class RegisterValidator extends JoiSchemaValidatorContract {
+export class RegisterValidator extends BaseValidator {
   private registerCreateSchema: Schema
 
   constructor() {

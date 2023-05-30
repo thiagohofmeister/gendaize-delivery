@@ -1,6 +1,6 @@
-import { BaseRequest } from '../Modules/Request/BaseRequest'
+import { BaseRequest } from '../Shared/Modules/Request/BaseRequest'
 
-export abstract class ProviderContract<TRequest extends BaseRequest> {
+export abstract class BaseProvider<TRequest extends BaseRequest> {
   constructor(readonly request: TRequest) {}
 
   protected getRequest(): TRequest {

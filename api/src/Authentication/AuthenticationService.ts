@@ -1,3 +1,4 @@
+import { BaseService } from '../Base/BaseService'
 import { JWT } from '../Shared/Modules/JWT'
 import { UserRoleTypeEnum } from '../User/Enums/UserRoleTypeEnum'
 import { UserService } from '../User/UserService'
@@ -8,13 +9,15 @@ import { AuthenticationTokenDto } from './Dto/AuthenticationTokenDto'
 import { AuthenticationStatusEnum } from './Enums/AuthenticationStatusEnum'
 import { Authentication } from './Models/Authentication'
 
-export class AuthenticationService {
+export class AuthenticationService extends BaseService {
   constructor(
     private readonly authenticationRepository: AuthenticationRepository,
     private readonly userService: UserService,
     private readonly userOrganizationRepository: UserOrganizationRepository,
     private readonly jwt: JWT
-  ) {}
+  ) {
+    super()
+  }
 
   async create(data: AuthenticationCreateDto) {
     const user = await this.userService.findOneByAuthData(data)

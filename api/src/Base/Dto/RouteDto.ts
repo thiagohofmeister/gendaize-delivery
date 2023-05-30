@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express'
 
+import { CoreRequest } from '../../Shared/Models/Request/CoreRequest'
 import { HttpMethodEnum } from '../Enums/HttpMethodEnum'
-import { CoreRequest } from '../Models/Request/CoreRequest'
 
 export class RouteDto {
   constructor(

@@ -1,10 +1,8 @@
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../Shared/BaseController'
-import { ResponseTypeEnum } from '../Shared/Enums/ResponseTypeEnum'
-import { Factory } from '../Shared/Factories/Factory'
+import { BaseController } from '../Base/BaseController'
+import { ResponseTypeEnum } from '../Base/Enums/ResponseTypeEnum'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
-import { ProductTypeFacade } from './ProductTypeFacade'
 
 export class ProductTypeController extends BaseController {
   constructor() {
@@ -16,14 +14,10 @@ export class ProductTypeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      this.getFacade(request).create(request.context.organization, request.body),
+      (await this.getServiceFactory(request))
+        .buildProductTypeService()
+        .create(request.context.organization, request.body),
       ResponseTypeEnum.OK
     )
-  }
-
-  protected getFacade(request: CoreRequest): ProductTypeFacade {
-    return Factory.getInstance()
-      .buildFacadeFactory(request.context?.organizationId)
-      .buildProductTypeFacade()
   }
 }

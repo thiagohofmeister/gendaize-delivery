@@ -1,12 +1,16 @@
-import { FindOptionsWhere, ObjectID, SelectQueryBuilder } from 'typeorm'
+import { EntityManager, FindOptionsWhere, ObjectID, SelectQueryBuilder } from 'typeorm'
 
-import { IFilterDefault } from '../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../Models/Interfaces/IItemListModel'
-import { IRepository } from '../Models/Interfaces/IRepository'
+import { DaoModel } from '../Shared/Models/DaoModel'
+import { DomainModel } from '../Shared/Models/DomainModel'
+import { IFilterDefault } from '../Shared/Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../Shared/Models/Interfaces/IItemListModel'
+import { IRepository } from '../Shared/Models/Interfaces/IRepository'
 
-export abstract class RepositoryContract<TDomainEntity, TDaoEntity>
+export abstract class BaseRepository<TDomainEntity extends DomainModel, TDaoEntity extends DaoModel>
   implements IRepository<TDomainEntity>
 {
+  constructor(private manager: EntityManager) {}
+
   abstract delete(
     criteria:
       | string
@@ -33,4 +37,15 @@ export abstract class RepositoryContract<TDomainEntity, TDaoEntity>
   protected abstract getMany(
     query: SelectQueryBuilder<TDaoEntity>
   ): Promise<IItemListModel<TDomainEntity>>
+
+  public setManager(manager: EntityManager) {
+    this.manager = manager
+    return this
+  }
+
+  public getManager(): EntityManager {
+    return this.manager
+  }
+
+  abstract getRepository()
 }
