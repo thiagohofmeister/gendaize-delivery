@@ -1,15 +1,15 @@
 import * as typeORM from 'typeorm'
 import { DataSource } from 'typeorm'
-import { Database } from './Database'
+import { PathUtils } from '../Shared/Utils/PathUtils'
 
-export class Postgres extends Database {
+export class Postgres {
   private static dataSource: DataSource
 
   public async createDataSource() {
     Postgres.dataSource = new typeORM.DataSource({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: this.getEntities(),
+      entities: PathUtils.getEntities(),
       logging: true
     })
 

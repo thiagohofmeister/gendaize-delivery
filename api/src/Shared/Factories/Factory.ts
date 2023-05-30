@@ -1,4 +1,5 @@
 import { Postgres } from '../../Database/Postgres'
+import { PathUtils } from '../Utils/PathUtils'
 import { ProviderFactory } from './ProviderFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 import { ServiceFactory } from './ServiceFactory'
@@ -16,8 +17,14 @@ export class Factory {
     return new RepositoryFactory(Postgres.getDataSource(), organizationId)
   }
 
-  public async buildServiceFactory(organizationId: string) {
-    return new ServiceFactory(await this.buildRepositoryFactory(organizationId))
+  public buildServiceFactory(organizationId: string) {
+    return new ServiceFactory(this.buildRepositoryFactory(organizationId))
+  }
+
+  public buildService(domainName: string) {
+    const Service = require(PathUtils.getDomains()[domainName]['service'])[`${domainName}Service`]
+
+    return new Service()
   }
 
   public static getInstance() {

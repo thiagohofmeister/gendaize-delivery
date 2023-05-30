@@ -21,9 +21,9 @@ export class ServiceFactory {
   public buildAuthenticationService() {
     return new AuthenticationService(
       this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildAuthenticationRepository(),
+      this.repositoryFactory.buildRepository('Organization'),
       this.buildUserService(),
-      this.repositoryFactory.buildUserOrganizationRepository(),
+      this.repositoryFactory.buildRepository('UserOrganization'),
       new JWT(process.env.JWT_KEY)
     )
   }
@@ -31,7 +31,7 @@ export class ServiceFactory {
   public buildOrganizationService() {
     return new OrganizationService(
       this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildOrganizationRepository(),
+      this.repositoryFactory.buildRepository('Organization'),
       new OrganizationValidator()
     )
   }
@@ -48,7 +48,7 @@ export class ServiceFactory {
   public buildUserService() {
     return new UserService(
       this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildUserRepository(),
+      this.repositoryFactory.buildRepository('User'),
       new UserValidator()
     )
   }
@@ -56,7 +56,7 @@ export class ServiceFactory {
   public buildProductTypeService() {
     return new ProductTypeService(
       this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildProductTypeRepository(),
+      this.repositoryFactory.buildRepository('ProductType'),
       new ProductTypeValidator()
     )
   }
