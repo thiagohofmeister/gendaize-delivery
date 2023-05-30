@@ -27,56 +27,10 @@
   },
   {
     "roleType": "CUSTOMER",
-    "permissions": [
-      {
-        "endpoint": "/product",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/product/$1",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/category/tree",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/brand",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/attribute",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/user/me",
-        "methods": ["GET"]
-      }
-    ]
+    "permissions": []
   },
   {
     "roleType": "GUEST",
-    "permissions": [
-      {
-        "endpoint": "/product",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/product/$1",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/category/tree",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/brand",
-        "methods": ["GET"]
-      },
-      {
-        "endpoint": "/attribute",
-        "methods": ["GET"]
-      }
-    ]
+    "permissions": []
   }
 ]
