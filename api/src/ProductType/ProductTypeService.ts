@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
 import { Organization } from '../Organization/Models/Organization'
 import { DataNotFoundException } from '../Shared/Models/Exceptions/DataNotFoundException'
+import { FilterDefault } from '../Shared/Models/Interfaces/FilterDefault'
 import { ProductTypeCreateDto } from './Dto/ProductTypeCreateDto'
 import { ProductType } from './Models/ProductType'
 import { ProductTypeRepository } from './ProductTypeRepository'
@@ -22,6 +23,10 @@ export class ProductTypeService extends BaseService {
     if (!result) throw new DataNotFoundException()
 
     return result
+  }
+
+  async get(filter: FilterDefault) {
+    return this.repository.findAll(filter)
   }
 
   public async create(

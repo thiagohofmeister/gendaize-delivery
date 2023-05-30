@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 import { DomainModel } from '../../Shared/Models/DomainModel'
 import { ResponseModel } from '../../Shared/Models/ResponseModel'
+import { EncryptUtils } from '../../Shared/Utils/EncryptUtils'
 import { UserOrganization } from '../../UserOrganization/Models/UserOrganization'
 import { UserStatusEnum } from '../Enums/UserStatusEnum'
 import { UserDao } from './UserDao'
@@ -33,7 +34,7 @@ export class User implements ResponseModel, DomainModel {
   }
 
   public setPassword(password: string) {
-    this.password = password
+    this.password = EncryptUtils.password(password)
     return this
   }
 

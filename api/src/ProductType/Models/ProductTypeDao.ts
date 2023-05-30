@@ -24,6 +24,6 @@ export class ProductTypeDao implements DaoModel {
   }
 
   toDomain() {
-    return new ProductType(this.label, this.organization.toDomain(), this.id)
+    return new ProductType(this.label, this.organization?.toDomain(), this.id)
   }
 }

@@ -47,11 +47,12 @@ export class AuthMiddleware {
           userOrganization: {
             user: { id: decodedToken.user.id },
             organization: { id: decodedToken.organization.id }
-          }
+          },
+          token: token
         }
       })
 
-      if (!userPermissions) {
+      if (!authentication) {
         res.status(401).send({
           code: `401.unauthorizedException`,
           message: 'Unauthorized.'
@@ -64,7 +65,7 @@ export class AuthMiddleware {
 
     const roleType = req.context.user.roleType as UserRoleTypeEnum
 
-    if (!(await this.validateRoleAndPermissions(req, roleType, userPermissions))) {
+    if (!(await this.validateRoleAndPermissions(req, roleType))) {
       res.status(401).send({
         code: `401.unauthorizedException`,
         message: 'Unauthorized.'
@@ -132,13 +133,7 @@ export class AuthMiddleware {
     }
   }
 
-  private async validateRoleAndPermissions(
-    req: CoreRequest,
-    roleType: UserRoleTypeEnum,
-    userPermissions
-  ) {
-    console.log({ roleType })
-
+  private async validateRoleAndPermissions(req: CoreRequest, roleType: UserRoleTypeEnum) {
     const servicePermissions = await new EndpointPermissionsService().get()
     const permissions =
       servicePermissions.find(sp => sp.getRoleType() === roleType)?.getPermissions() || []

@@ -21,9 +21,8 @@ export class ServiceFactory {
   public buildAuthenticationService() {
     return new AuthenticationService(
       this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Organization'),
+      this.repositoryFactory.buildRepository('Authentication'),
       this.buildUserService(),
-      this.repositoryFactory.buildRepository('UserOrganization'),
       new JWT(process.env.JWT_KEY)
     )
   }

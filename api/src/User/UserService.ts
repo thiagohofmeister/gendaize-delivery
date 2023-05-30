@@ -1,4 +1,3 @@
-import { createHash } from 'crypto'
 import { DataSource, EntityManager } from 'typeorm'
 import { AuthenticationCreateDto } from '../Authentication/Dto/AuthenticationCreateDto'
 import { BaseService } from '../Base/BaseService'
@@ -41,12 +40,7 @@ export class UserService extends BaseService {
   public async create(organization: Organization, data: UserCreateDto): Promise<User> {
     await this.validator.userCreatePayloadValidate(data)
 
-    const user = new User(
-      data.name,
-      data.documentNumber,
-      data.email,
-      this.createHash256(this.createHash256(data.password))
-    )
+    const user = new User(data.name, data.documentNumber, data.email, data.password)
 
     user.addOrganization(
       new UserOrganization(
@@ -62,10 +56,6 @@ export class UserService extends BaseService {
 
   public async findOneByDocumentNumber(documentNumber: string): Promise<User> {
     return this.repository.findOneByDocumentNumber(documentNumber)
-  }
-
-  private createHash256(str: string): string {
-    return createHash('sha256').update(str).digest('hex')
   }
 
   public setManager(manager: EntityManager) {

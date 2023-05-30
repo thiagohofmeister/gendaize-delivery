@@ -9,7 +9,9 @@ export class AuthenticationDao implements DaoModel {
   @PrimaryColumn()
   id: string
 
-  @ManyToOne(() => UserOrganizationDao, userOrganization => userOrganization.authentications)
+  @ManyToOne(() => UserOrganizationDao, userOrganization => userOrganization.authentications, {
+    cascade: false
+  })
   @JoinColumn({
     name: 'user_organization_id'
   })

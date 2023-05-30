@@ -1,16 +1,15 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
+import { PathUtils } from '../Shared/Utils/PathUtils'
 import { EndpointPermissions } from './Models/EndpointPermissions'
 
 export class EndpointPermissionsService {
   constructor() {}
 
   public async get(): Promise<EndpointPermissions[]> {
-    const resourcesPath = path.join(__dirname, '..', '..', '..', 'resources')
-
     const fileContent = fs
-      .readFileSync(path.join(resourcesPath, 'endpointPermissions.json'))
+      .readFileSync(path.join(PathUtils.getResourcesPath(), 'endpointPermissions.json'))
       .toString()
 
     const endpointPermissions = []

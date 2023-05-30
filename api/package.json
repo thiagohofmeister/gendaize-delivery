@@ -7,11 +7,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Api.ts",
-    "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Worker.ts",
     "test": "jest",
     "build": "rm -rf ./dist && tsc",
-    "prod": "node ./dist/Api.js",
-    "prod-worker": "node ./dist/Worker.js"
+    "prod": "node ./dist/Api.js"
   },
   "dependencies": {
     "amqplib": "^0.10.0",

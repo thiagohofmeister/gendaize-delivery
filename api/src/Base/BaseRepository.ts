@@ -2,9 +2,9 @@ import { EntityManager, FindOptionsWhere, ObjectID, SelectQueryBuilder } from 't
 
 import { DaoModel } from '../Shared/Models/DaoModel'
 import { DomainModel } from '../Shared/Models/DomainModel'
-import { IFilterDefault } from '../Shared/Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../Shared/Models/Interfaces/IItemListModel'
+import { FilterDefault } from '../Shared/Models/Interfaces/FilterDefault'
 import { IRepository } from '../Shared/Models/Interfaces/IRepository'
+import { ListResponseModel } from '../Shared/Models/Interfaces/ListResponseModel'
 
 export abstract class BaseRepository<TDomainEntity extends DomainModel, TDaoEntity extends DaoModel>
   implements IRepository<TDomainEntity>
@@ -30,13 +30,13 @@ export abstract class BaseRepository<TDomainEntity extends DomainModel, TDaoEnti
 
   abstract findOneByPrimaryColumn(id: string): Promise<TDomainEntity>
 
-  abstract findAll(filter: IFilterDefault): Promise<IItemListModel<TDomainEntity>>
+  abstract findAll(filter: FilterDefault): Promise<ListResponseModel<TDomainEntity>>
 
   protected abstract getOne(query: SelectQueryBuilder<TDaoEntity>): Promise<TDomainEntity | null>
 
   protected abstract getMany(
     query: SelectQueryBuilder<TDaoEntity>
-  ): Promise<IItemListModel<TDomainEntity>>
+  ): Promise<ListResponseModel<TDomainEntity>>
 
   public setManager(manager: EntityManager) {
     this.manager = manager

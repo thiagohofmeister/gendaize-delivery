@@ -30,8 +30,9 @@ export class UserOrganization implements ResponseModel, DomainModel {
     return this.organization
   }
 
-  public setOrganization(organization: Organization): void {
+  public setOrganization(organization: Organization): this {
     this.organization = organization
+    return this
   }
 
   public getUser(): User {

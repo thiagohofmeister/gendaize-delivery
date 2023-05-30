@@ -1,10 +1,10 @@
 import { ResponseTypeEnum } from '../../../Base/Enums/ResponseTypeEnum'
-import { IErrorReason } from '../Interfaces/IErrorReason'
+import { ErrorReason } from '../Interfaces/ErrorReason'
 
 export abstract class BaseError extends Error {
   private code: string
 
-  constructor(public message: string, private reasons: IErrorReason[] = []) {
+  constructor(public message: string, private reasons: ErrorReason[] = []) {
     super(message)
   }
 
@@ -12,12 +12,12 @@ export abstract class BaseError extends Error {
     return this.message
   }
 
-  public addReason(reason: IErrorReason): this {
+  public addReason(reason: ErrorReason): this {
     this.reasons.push(reason)
     return this
   }
 
-  public getReasons(): IErrorReason[] {
+  public getReasons(): ErrorReason[] {
     return this.reasons
   }
 

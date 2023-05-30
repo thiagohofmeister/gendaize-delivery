@@ -1,8 +1,8 @@
-import { IItemListModel } from '../Interfaces/IItemListModel'
+import { ListResponseModel } from '../Interfaces/ListResponseModel'
 import { ResponseModel } from '../ResponseModel'
 
 export abstract class SuccessContract {
-  constructor(private body?: ResponseModel | ResponseModel[] | IItemListModel<ResponseModel>) {}
+  constructor(private body?: ResponseModel | ResponseModel[] | ListResponseModel<ResponseModel>) {}
 
   public getBody() {
     return this.render(this.body)
@@ -11,8 +11,8 @@ export abstract class SuccessContract {
   abstract getStatus(): number
 
   private render(
-    body: ResponseModel | ResponseModel[] | IItemListModel<ResponseModel>
-  ): ResponseModel | ResponseModel[] | IItemListModel<ResponseModel> {
+    body: ResponseModel | ResponseModel[] | ListResponseModel<ResponseModel>
+  ): ResponseModel | ResponseModel[] | ListResponseModel<ResponseModel> {
     if (!body) {
       return undefined
     }
@@ -22,7 +22,7 @@ export abstract class SuccessContract {
     }
 
     if (!!body && body.hasOwnProperty('items') && body.hasOwnProperty('total')) {
-      return this.renderList(body as IItemListModel<ResponseModel>)
+      return this.renderList(body as ListResponseModel<ResponseModel>)
     }
 
     return this.renderOne(body as ResponseModel)
@@ -36,7 +36,7 @@ export abstract class SuccessContract {
     return entities.map(entity => this.renderOne(entity))
   }
 
-  protected renderList(result: IItemListModel<ResponseModel>) {
+  protected renderList(result: ListResponseModel<ResponseModel>) {
     return {
       items: result.items.map(entity => this.renderOne(entity)),
       total: result.total

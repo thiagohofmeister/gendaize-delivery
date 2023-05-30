@@ -25,7 +25,7 @@ export class ProductType implements ResponseModel, DomainModel {
     return {
       id: this.getId(),
       name: this.getLabel(),
-      organization: this.getOrganization().toView()
+      organization: this.getOrganization()?.toView()
     }
   }
 

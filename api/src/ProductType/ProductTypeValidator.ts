@@ -11,10 +11,7 @@ export class ProductTypeValidator extends BaseValidator {
     super()
 
     this.productTypeCreateSchema = Joi.object({
-      name: Joi.string().required(),
-      documentNumber: Joi.string().required(),
-      email: Joi.string().required(),
-      password: Joi.string().required()
+      label: Joi.string().required()
     })
   }
 

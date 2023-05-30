@@ -3,8 +3,8 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { BaseRepository } from '../../../Base/BaseRepository'
 import { DaoModel } from '../../Models/DaoModel'
 import { DomainModel } from '../../Models/DomainModel'
-import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
+import { FilterDefault } from '../../Models/Interfaces/FilterDefault'
+import { ListResponseModel } from '../../Models/Interfaces/ListResponseModel'
 
 export abstract class TypeOrmMongoDBRepositoryContract<
   TDomainEntity extends DomainModel,
@@ -18,7 +18,7 @@ export abstract class TypeOrmMongoDBRepositoryContract<
     this.repository = repository
   }
 
-  public async getAll(filters: IFilterDefault): Promise<IItemListModel<TDomainEntity>> {
+  public async getAll(filters: FilterDefault): Promise<ListResponseModel<TDomainEntity>> {
     const query = this.applyPaginator(
       filters,
       this.applySearch(filters, this.customToGetAll(filters, {}))
@@ -87,7 +87,7 @@ export abstract class TypeOrmMongoDBRepositoryContract<
   }
 
   public applyPaginator(
-    filters: IFilterDefault,
+    filters: FilterDefault,
     query: FindManyOptions<TDaoEntity>
   ): FindManyOptions<TDaoEntity> {
     const skip = (this.getPage(filters) - 1) * this.getSize(filters)
@@ -103,14 +103,14 @@ export abstract class TypeOrmMongoDBRepositoryContract<
   }
 
   protected customToGetAll(
-    filters: IFilterDefault,
+    filters: FilterDefault,
     query: FindManyOptions<TDaoEntity>
   ): FindManyOptions<TDaoEntity> {
     return query
   }
 
   protected applySearch(
-    filters: IFilterDefault,
+    filters: FilterDefault,
     query: FindManyOptions<TDaoEntity>
   ): FindManyOptions<TDaoEntity> {
     if (!filters.query) {
@@ -130,11 +130,11 @@ export abstract class TypeOrmMongoDBRepositoryContract<
     return query
   }
 
-  protected getFieldsToSearch(filters: IFilterDefault): string[] {
+  protected getFieldsToSearch(filters: FilterDefault): string[] {
     return []
   }
 
-  protected getPage(filters: IFilterDefault) {
+  protected getPage(filters: FilterDefault) {
     filters.page = typeof filters.page === 'string' ? parseInt(filters.page) : filters.page
 
     let page = 1
@@ -145,7 +145,7 @@ export abstract class TypeOrmMongoDBRepositoryContract<
     return page
   }
 
-  protected getSize(filters: IFilterDefault) {
+  protected getSize(filters: FilterDefault) {
     filters.size = typeof filters.size === 'string' ? parseInt(filters.size) : filters.size
 
     let size = 15
@@ -159,7 +159,7 @@ export abstract class TypeOrmMongoDBRepositoryContract<
     return size
   }
 
-  public async findAll(filters: IFilterDefault): Promise<IItemListModel<TDomainEntity>> {
+  public async findAll(filters: FilterDefault): Promise<ListResponseModel<TDomainEntity>> {
     const query = this.applySearch(filters, this.customToGetAll(filters, {}))
 
     return {

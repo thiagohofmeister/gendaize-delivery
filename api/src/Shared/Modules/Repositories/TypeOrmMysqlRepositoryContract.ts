@@ -10,8 +10,8 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { BaseRepository } from '../../../Base/BaseRepository'
 import { DaoModel } from '../../Models/DaoModel'
 import { DomainModel } from '../../Models/DomainModel'
-import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
+import { FilterDefault } from '../../Models/Interfaces/FilterDefault'
+import { ListResponseModel } from '../../Models/Interfaces/ListResponseModel'
 
 export abstract class TypeOrmMysqlRepositoryContract<
   TDomainEntity extends DomainModel,
@@ -22,6 +22,8 @@ export abstract class TypeOrmMysqlRepositoryContract<
   }
 
   public async create(entity: TDomainEntity): Promise<TDomainEntity> {
+    await this.beforeSave(entity)
+
     const result = await this.getRepository().insert(
       this.toDaoEntity(entity) as QueryDeepPartialEntity<TDaoEntity>
     )
@@ -33,12 +35,16 @@ export abstract class TypeOrmMysqlRepositoryContract<
     entity: TDomainEntity,
     withFindBeforeReturn: boolean = true
   ): Promise<TDomainEntity> {
+    await this.beforeSave(entity)
+
     await this.getRepository().save(this.getRepository().create(this.toDaoEntity(entity)))
 
     if (!withFindBeforeReturn) return entity
 
     return this.findOneByPrimaryColumn(this.getPrimaryColumnValueByEntity(entity))
   }
+
+  protected async beforeSave(entity: TDomainEntity) {}
 
   public async delete(
     criteria:
@@ -57,10 +63,10 @@ export abstract class TypeOrmMysqlRepositoryContract<
     return true
   }
 
-  public async findAll<TFilter extends IFilterDefault>(
+  public async findAll<TFilter extends FilterDefault>(
     filter: TFilter,
     bypassorganizationId: boolean = false
-  ): Promise<IItemListModel<TDomainEntity>> {
+  ): Promise<ListResponseModel<TDomainEntity>> {
     const query = this.applyPaginator(
       filter,
       this.customToFindAll(this.getRepository().createQueryBuilder(), filter)
@@ -94,13 +100,13 @@ export abstract class TypeOrmMysqlRepositoryContract<
   }
 
   public applyPaginator(
-    filter: IFilterDefault,
+    filter: FilterDefault,
     query: SelectQueryBuilder<TDaoEntity>
   ): SelectQueryBuilder<TDaoEntity> {
     return query.skip((this.getPage(filter) - 1) * this.getSize(filter)).take(this.getSize(filter))
   }
 
-  protected getPage(filter: IFilterDefault) {
+  protected getPage(filter: FilterDefault) {
     filter.page = typeof filter.page === 'string' ? parseInt(filter.page) : filter.page
 
     let page = 1
@@ -111,7 +117,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
     return page
   }
 
-  protected getSize(filter: IFilterDefault) {
+  protected getSize(filter: FilterDefault) {
     filter.size = typeof filter.size === 'string' ? parseInt(filter.size) : filter.size
 
     let size = 15
@@ -127,7 +133,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   protected customToFindAll(
     query: SelectQueryBuilder<TDaoEntity>,
-    filter?: IFilterDefault
+    filter?: FilterDefault
   ): SelectQueryBuilder<TDaoEntity> {
     return query
   }
@@ -180,7 +186,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   protected async getMany(
     query: SelectQueryBuilder<TDaoEntity> | FindOneOptions<TDaoEntity>
-  ): Promise<IItemListModel<TDomainEntity>> {
+  ): Promise<ListResponseModel<TDomainEntity>> {
     if (query instanceof SelectQueryBuilder) {
       return {
         items: this.toDomainEntityMany(await query.getMany()),

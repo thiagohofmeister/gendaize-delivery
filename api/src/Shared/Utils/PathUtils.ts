@@ -62,6 +62,10 @@ export class PathUtils {
     return Object.keys(this.pathes)
   }
 
+  public static getResourcesPath() {
+    return path.join(__dirname, '..', '..', '..', 'resources')
+  }
+
   public static fillPathes() {
     const rootDir = path.join(__dirname, '..', '..')
     const domains = {}

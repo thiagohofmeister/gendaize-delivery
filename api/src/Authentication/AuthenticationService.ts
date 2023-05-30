@@ -3,7 +3,6 @@ import { BaseService } from '../Base/BaseService'
 import { JWT } from '../Shared/Modules/JWT'
 import { UserRoleTypeEnum } from '../User/Enums/UserRoleTypeEnum'
 import { UserService } from '../User/UserService'
-import { UserOrganizationRepository } from '../UserOrganization/UserOrganizationRepository'
 import { AuthenticationRepository } from './AuthenticationRepository'
 import { AuthenticationCreateDto } from './Dto/AuthenticationCreateDto'
 import { AuthenticationTokenDto } from './Dto/AuthenticationTokenDto'
@@ -15,7 +14,6 @@ export class AuthenticationService extends BaseService {
     dataSource: DataSource,
     private readonly authenticationRepository: AuthenticationRepository,
     private readonly userService: UserService,
-    private readonly userOrganizationRepository: UserOrganizationRepository,
     private readonly jwt: JWT
   ) {
     super(dataSource)
