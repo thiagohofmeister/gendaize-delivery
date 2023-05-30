@@ -1,9 +1,9 @@
 import { BaseAuthRoute } from '../Base/BaseAuthRoute'
 import { RouteDto } from '../Base/Dto/RouteDto'
 import { HttpMethodEnum } from '../Base/Enums/HttpMethodEnum'
-import { ProductTypeController } from './ProductTypeController'
+import { AttributeController } from './AttributeController'
 
-export class ProductTypeRoutes extends BaseAuthRoute<ProductTypeController> {
+export class AttributeRoutes extends BaseAuthRoute<AttributeController> {
   getRoutes(): RouteDto[] {
     const controller = this.getController()
 

@@ -4,7 +4,7 @@ import { BaseController } from '../Base/BaseController'
 import { ResponseTypeEnum } from '../Base/Enums/ResponseTypeEnum'
 import { CoreRequest } from '../Shared/Models/Request/CoreRequest'
 
-export class ProductTypeController extends BaseController {
+export class AttributeController extends BaseController {
   constructor() {
     super()
     this.post = this.post.bind(this)
@@ -18,7 +18,7 @@ export class ProductTypeController extends BaseController {
       response,
       next,
       (await this.getServiceFactory(request))
-        .buildProductTypeService()
+        .buildAttributeService()
         .create(request.context.organization, request.body),
       ResponseTypeEnum.OK
     )
@@ -28,7 +28,7 @@ export class ProductTypeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductTypeService().get(request.query),
+      (await this.getServiceFactory(request)).buildAttributeService().get(request.query),
       ResponseTypeEnum.OK
     )
   }
@@ -37,7 +37,7 @@ export class ProductTypeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductTypeService().getById(request.params.id),
+      (await this.getServiceFactory(request)).buildAttributeService().getById(request.params.id),
       ResponseTypeEnum.OK
     )
   }
@@ -50,7 +50,7 @@ export class ProductTypeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductTypeService().delete(request.params.id),
+      (await this.getServiceFactory(request)).buildAttributeService().delete(request.params.id),
       ResponseTypeEnum.NO_CONTENT
     )
   }

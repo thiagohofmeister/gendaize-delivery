@@ -1,0 +1,6 @@
+export enum AttributeTypeEnum {
+  SELECT = 'SELECT',
+  SELECT_WITH_INCREMENTS = 'SELECT_WITH_INCREMENTS',
+  MULTI_SELECT = 'MULTI_SELECT',
+  TEXT = 'TEXT'
+}

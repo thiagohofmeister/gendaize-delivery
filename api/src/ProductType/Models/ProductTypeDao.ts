@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import { AttributeDao } from '../../Attribute/Models/AttributeDao'
 import { OrganizationDao } from '../../Organization/Models/OrganizationDao'
 import { DaoModel } from '../../Shared/Models/DaoModel'
 import { ProductType } from './ProductType'
@@ -16,6 +17,12 @@ export class ProductTypeDao implements DaoModel {
     name: 'organization_id'
   })
   organization: OrganizationDao
+
+  @OneToMany(() => AttributeDao, attribute => attribute.organization)
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  attributes: AttributeDao[]
 
   constructor(id: string, label: string, organization: OrganizationDao) {
     this.id = id

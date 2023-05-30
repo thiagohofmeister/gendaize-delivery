@@ -29,6 +29,10 @@ export class ProductTypeService extends BaseService {
     return this.repository.findAll(filter)
   }
 
+  async delete(id: string) {
+    await this.repository.delete(id)
+  }
+
   public async create(
     organization: Organization,
     data: ProductTypeCreateDto

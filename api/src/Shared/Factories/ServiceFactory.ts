@@ -1,3 +1,5 @@
+import { AttributeService } from '../../Attribute/AttributeService'
+import { AttributeValidator } from '../../Attribute/AttributeValidator'
 import { AuthenticationService } from '../../Authentication/AuthenticationService'
 import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
 import { OrganizationService } from '../../Organization/OrganizationService'
@@ -57,6 +59,15 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildRepository('ProductType'),
       new ProductTypeValidator()
+    )
+  }
+
+  public buildAttributeService() {
+    return new AttributeService(
+      this.repositoryFactory.getDataSource(),
+      this.repositoryFactory.buildRepository('Attribute'),
+      new AttributeValidator(),
+      this.buildProductTypeService()
     )
   }
 }

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 
+import { AttributeDao } from '../../Attribute/Models/AttributeDao'
 import { DaoModel } from '../../Shared/Models/DaoModel'
 import { UserOrganizationDao } from '../../UserOrganization/Models/UserOrganizationDao'
 import { DocumentTypeEnum } from '../Enums/DocumentTypeEnum'
@@ -41,6 +42,12 @@ export class OrganizationDao implements DaoModel {
     name: 'user_id'
   })
   userOrganizations: UserOrganizationDao[]
+
+  @OneToMany(() => AttributeDao, attribute => attribute.organization)
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  attributes: AttributeDao[]
 
   constructor(
     id: string,
