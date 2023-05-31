@@ -60,7 +60,7 @@ export class AuthMiddleware {
         return
       }
 
-      await this.formatRequest(req, decodedToken.user.roleType, decodedToken)
+      await this.formatRequest(req, decodedToken.user.roleType, decodedToken, authentication.id)
     }
 
     const roleType = req.context.user.roleType as UserRoleTypeEnum
@@ -87,7 +87,8 @@ export class AuthMiddleware {
   private async formatRequest(
     req: CoreRequest,
     roleType: UserRoleTypeEnum,
-    token?: AuthenticationTokenDto
+    token?: AuthenticationTokenDto,
+    authenticationId?: string
   ) {
     if (roleType === UserRoleTypeEnum.GUEST) {
       req.context = {
@@ -103,6 +104,7 @@ export class AuthMiddleware {
 
       req.context = {
         organizationId: token.organization.id,
+        authenticationId,
         user: {
           id: token.user.id,
           email: token.user.email,

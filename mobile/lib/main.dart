@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/screens/home_page.dart';
 import 'package:mobile/screens/login_page.dart';
+import 'package:mobile/store/authentication_store.dart';
 import 'package:mobile/store/user_logged_store.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (_) => UserLoggedStore(),
-      ),
+      ChangeNotifierProvider(create: (_) => UserLoggedStore()),
+      ChangeNotifierProvider(create: (_) => AuthenticationStore()),
     ],
     child: const MyApp(),
   ));

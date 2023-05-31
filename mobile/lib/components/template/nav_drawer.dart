@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/store/authentication_store.dart';
+import 'package:provider/provider.dart';
 
 class NavDrawer extends StatelessWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -24,9 +26,9 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Sair'),
-            onTap: () => {
-
-              Navigator.pushReplacementNamed(context, 'login'),
+            onTap: () {
+              Provider.of<AuthenticationStore>(context, listen: false).logout();
+              Navigator.pushReplacementNamed(context, 'login');
             },
           ),
         ],

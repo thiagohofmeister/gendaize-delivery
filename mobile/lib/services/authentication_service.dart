@@ -35,8 +35,8 @@ class AuthenticationService extends ServiceContract {
   }
 
   Future<void> logout({required String token}) async {
-    http.Response response = await super.httpClient.post(
-      getUri(resource: resource, endpoint: 'logout'),
+    http.Response response = await super.httpClient.delete(
+      getUri(resource: resource),
       headers: {
         'authorization': 'Bearer $token',
       },

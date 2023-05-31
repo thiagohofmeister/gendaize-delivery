@@ -19,6 +19,10 @@ export class AuthenticationService extends BaseService {
     super(dataSource)
   }
 
+  async logout(id: string) {
+    await this.authenticationRepository.delete(id)
+  }
+
   async create(data: AuthenticationCreateDto) {
     const user = await this.userService.findOneByAuthData(data)
 

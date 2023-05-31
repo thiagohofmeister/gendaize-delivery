@@ -9,6 +9,18 @@ export class AuthenticationController extends BaseController {
   constructor() {
     super()
     this.post = this.post.bind(this)
+    this.logout = this.logout.bind(this)
+  }
+
+  async logout(req: CoreRequest, res: Response, next: NextFunction) {
+    return this.responseHandler(
+      res,
+      next,
+      (await this.getServiceFactory(req))
+        .buildAuthenticationService()
+        .logout(req.context?.authenticationId),
+      ResponseTypeEnum.NO_CONTENT
+    )
   }
 
   async post(req: CoreRequest, res: Response, next: NextFunction) {

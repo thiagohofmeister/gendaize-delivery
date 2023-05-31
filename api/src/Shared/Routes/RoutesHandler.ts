@@ -1,13 +1,13 @@
 import { Router } from 'express'
 
 import { AuthMiddleware } from '../../Authentication/Middlewares/AuthMiddleware'
-import { BaseAuthRoute } from '../../Base/BaseAuthRoute'
-import { BaseRoute } from '../../Base/BaseRoute'
+import { AuthRouteDto } from '../../Base/Dto/AuthRouteDto'
+import { RouteDto } from '../../Base/Dto/RouteDto'
 import { PathUtils } from '../Utils/PathUtils'
 
 export class RoutesHandler {
-  private authRoutes: BaseAuthRoute<any>[]
-  private noAuthRoutes: BaseRoute<any>[]
+  private authRoutes: AuthRouteDto[]
+  private noAuthRoutes: RouteDto[]
 
   constructor() {
     this.initializeRoutes = this.initializeRoutes.bind(this)
@@ -31,12 +31,17 @@ export class RoutesHandler {
 
       const route = new Route(new Controller())
 
-      if (route instanceof BaseAuthRoute) {
-        this.authRoutes.push(route)
-        return
-      }
+      const routes = route.getRoutes()
 
-      this.noAuthRoutes.push(route)
+      for (let i = 0; i < routes.length; i++) {
+        const endpoint = routes[i]
+        if (endpoint instanceof AuthRouteDto) {
+          this.authRoutes.push(routes[i])
+          continue
+        }
+
+        this.noAuthRoutes.push(routes[i])
+      }
     })
   }
 
@@ -55,24 +60,18 @@ export class RoutesHandler {
 
     for (let i = 0; i < this.noAuthRoutes.length; i++) {
       const route = this.noAuthRoutes[i]
-      const routes = route.getRoutes()
 
-      for (let j = 0; j < routes.length; j++) {
-        const route = routes[j]
-        router[route.getMethod()](route.getPath(), route.getHandle())
-      }
+      router[route.getMethod()](route.getPath(), route.getHandle())
     }
 
     this.getAuthMiddlewares().forEach(middleware => router.use(middleware))
 
+    console.log(this.authRoutes)
+
     for (let i = 0; i < this.authRoutes.length; i++) {
       const route = this.authRoutes[i]
-      const routes = route.getRoutes()
 
-      for (let j = 0; j < routes.length; j++) {
-        const route = routes[j]
-        router[route.getMethod()](route.getPath(), route.getHandle())
-      }
+      router[route.getMethod()](route.getPath(), route.getHandle())
     }
 
     return router
