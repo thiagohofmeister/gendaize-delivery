@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/store/authentication_store.dart';
+import 'package:mobile/store/user_logged_store.dart';
 import 'package:provider/provider.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -10,22 +11,16 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            child: Image(
-              image: AssetImage('assets/images/logo.png'),
-              width: 200,
+          DrawerHeader(
+            child: Consumer<UserLoggedStore>(
+              builder: (context, store, child) {
+                return Text('Olá ${store.user!.name}!');
+              },
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () => {
-              Navigator.pushReplacementNamed(context, 'home'),
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Sair'),
+            leading: const Icon(Icons.logout),
+            title: const Text('Desconectar'),
             onTap: () {
               Provider.of<AuthenticationStore>(context, listen: false).logout();
               Navigator.pushReplacementNamed(context, 'login');
