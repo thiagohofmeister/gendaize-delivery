@@ -30,7 +30,7 @@ export class UserService extends BaseService {
   }
 
   async findOneByAuthData(data: AuthenticationCreateDto) {
-    const user = await this.repository.findOneByAuthData(data.login, data.password)
+    const user = await this.repository.findOneByAuthData(data.login.toLowerCase(), data.password)
 
     if (user) return user
 
@@ -40,7 +40,7 @@ export class UserService extends BaseService {
   public async create(organization: Organization, data: UserCreateDto): Promise<User> {
     await this.validator.userCreatePayloadValidate(data)
 
-    const user = new User(data.name, data.documentNumber, data.email, data.password)
+    const user = new User(data.name, data.documentNumber, data.email.toLowerCase(), data.password)
 
     user.addOrganization(
       new UserOrganization(

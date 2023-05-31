@@ -43,7 +43,7 @@ export class User implements ResponseModel, DomainModel {
   }
 
   public setEmail(email: string) {
-    this.email = email
+    this.email = email.toLowerCase()
     return this
   }
 
