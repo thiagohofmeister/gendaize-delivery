@@ -39,9 +39,9 @@ export class AuthenticationController extends BaseController {
     return this.responseHandler(
       res,
       next,
-      (await this.getServiceFactory(req)).buildAuthenticationService().create({
+      (await this.getServiceFactory(req)).buildAuthenticationService().authenticate({
         device: req.header('User-Agent'),
-        isCustomer: req.context?.isCustomer,
+        isCustomer: !!req.header('x-customer-app'),
         login,
         password
       }),

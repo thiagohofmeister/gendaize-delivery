@@ -66,8 +66,6 @@ export class RoutesHandler {
 
     this.getAuthMiddlewares().forEach(middleware => router.use(middleware))
 
-    console.log(this.authRoutes)
-
     for (let i = 0; i < this.authRoutes.length; i++) {
       const route = this.authRoutes[i]
 

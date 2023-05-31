@@ -1,6 +1,7 @@
 import { AttributeService } from '../../Attribute/AttributeService'
 import { AttributeValidator } from '../../Attribute/AttributeValidator'
 import { AuthenticationService } from '../../Authentication/AuthenticationService'
+import { CustomerService } from '../../Customer/CustomerService'
 import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
 import { OrganizationService } from '../../Organization/OrganizationService'
 import { OrganizationValidator } from '../../Organization/OrganizationValidator'
@@ -25,6 +26,7 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildRepository('Authentication'),
       this.buildUserService(),
+      this.buildCustomerService(),
       new JWT(process.env.JWT_KEY)
     )
   }
@@ -51,6 +53,13 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildRepository('User'),
       new UserValidator()
+    )
+  }
+
+  public buildCustomerService() {
+    return new CustomerService(
+      this.repositoryFactory.getDataSource(),
+      this.repositoryFactory.buildRepository('Customer')
     )
   }
 

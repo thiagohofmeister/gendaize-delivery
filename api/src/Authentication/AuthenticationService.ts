@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
+import { CustomerService } from '../Customer/CustomerService'
 import { JWT } from '../Shared/Modules/JWT'
-import { UserRoleTypeEnum } from '../User/Enums/UserRoleTypeEnum'
 import { UserService } from '../User/UserService'
 import { AuthenticationRepository } from './AuthenticationRepository'
 import { AuthenticationCreateDto } from './Dto/AuthenticationCreateDto'
@@ -14,6 +14,7 @@ export class AuthenticationService extends BaseService {
     dataSource: DataSource,
     private readonly authenticationRepository: AuthenticationRepository,
     private readonly userService: UserService,
+    private readonly customerService: CustomerService,
     private readonly jwt: JWT
   ) {
     super(dataSource)
@@ -23,16 +24,38 @@ export class AuthenticationService extends BaseService {
     await this.authenticationRepository.delete(id)
   }
 
-  async create(data: AuthenticationCreateDto) {
+  async authenticate(data: AuthenticationCreateDto) {
+    const authenticate = data.isCustomer
+      ? await this.authenticateCustomer(data)
+      : await this.authenticateUser(data)
+
+    return await this.authenticationRepository.create(authenticate)
+  }
+
+  private async authenticateCustomer(data: AuthenticationCreateDto): Promise<Authentication> {
+    const customer = await this.customerService.findOneByAuthData(data)
+
+    const jwtTokenData: AuthenticationTokenDto = {
+      customer: {
+        id: customer.getId(),
+        name: customer.getName(),
+        email: customer.getEmail(),
+        phone: customer.getPhone()
+      },
+      organization: {
+        id: customer.getOrganization().getId()
+      }
+    }
+
+    const token = this.jwt.sign(jwtTokenData)
+
+    return new Authentication(token, data.device, AuthenticationStatusEnum.ENABLED, null, customer)
+  }
+
+  private async authenticateUser(data: AuthenticationCreateDto): Promise<Authentication> {
     const user = await this.userService.findOneByAuthData(data)
 
-    const userOrganization = user
-      .getAllOrganizations()
-      .filter(usrOrg =>
-        data.isCustomer
-          ? usrOrg.getRoleType() === UserRoleTypeEnum.CUSTOMER
-          : usrOrg.getRoleType() !== UserRoleTypeEnum.CUSTOMER
-      )?.[0]
+    const userOrganization = user.getAllOrganizations()?.[0]
 
     const jwtTokenData: AuthenticationTokenDto = {
       user: {
@@ -41,17 +64,18 @@ export class AuthenticationService extends BaseService {
         email: user.getEmail(),
         roleType: userOrganization.getRoleType()
       },
-      organization: userOrganization
-        ? {
-            id: userOrganization.getOrganization().getId()
-          }
-        : null
+      organization: {
+        id: userOrganization.getOrganization().getId()
+      }
     }
 
     const token = this.jwt.sign(jwtTokenData)
 
-    return await this.authenticationRepository.create(
-      new Authentication(token, data.device, AuthenticationStatusEnum.ENABLED, userOrganization)
+    return new Authentication(
+      token,
+      data.device,
+      AuthenticationStatusEnum.ENABLED,
+      userOrganization
     )
   }
 }

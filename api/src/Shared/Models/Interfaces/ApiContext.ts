@@ -4,7 +4,12 @@ export interface ApiContext {
   organization?: Organization
   organizationId?: string
   authenticationId?: string
-  isCustomer?: boolean
+  customer?: {
+    id: string
+    name: string
+    email: string
+    phone: string
+  }
   user?: {
     id?: string
     email?: string

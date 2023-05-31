@@ -46,6 +46,22 @@ CREATE TABLE public.user_organization (
 
 
 -- -----------------------------------------------------
+-- Table `customer`
+-- -----------------------------------------------------
+CREATE TABLE public.customer (
+	id char(36) NOT NULL,
+	"name" varchar NOT NULL,
+	phone varchar NOT NULL,
+	email varchar NULL,
+	"password" varchar NULL,
+	organization_id char(36) NOT NULL,
+	CONSTRAINT customer_pk PRIMARY KEY (id),
+	CONSTRAINT customer_fk FOREIGN KEY (organization_id) REFERENCES public.organization(id),
+  CONSTRAINT customer_un UNIQUE (email,organization_id,phone)
+);
+
+
+-- -----------------------------------------------------
 -- Table `authentication`
 -- -----------------------------------------------------
 CREATE TABLE public.authentication (
@@ -53,10 +69,12 @@ CREATE TABLE public.authentication (
 	"token" text NOT NULL,
 	device varchar NOT NULL,
 	status varchar NOT NULL,
-	user_organization_id char(36) NOT NULL,
+	user_organization_id char(36) NULL,
+  customer_id char(36) NULL,
 	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT authentication_pk PRIMARY KEY (id),
-	CONSTRAINT authentication_fk FOREIGN KEY (user_organization_id) REFERENCES public.user_organization(id)
+	CONSTRAINT authentication_fk FOREIGN KEY (user_organization_id) REFERENCES public.user_organization(id),
+  CONSTRAINT authentication_fk2 FOREIGN KEY (customer_id) REFERENCES public.customer(id)
 );
 
 

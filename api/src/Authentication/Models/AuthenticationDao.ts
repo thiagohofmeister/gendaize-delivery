@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { CustomerDao } from '../../Customer/Models/CustomerDao'
 import { DaoModel } from '../../Shared/Models/DaoModel'
 import { UserOrganizationDao } from '../../UserOrganization/Models/UserOrganizationDao'
 import { AuthenticationStatusEnum } from '../Enums/AuthenticationStatusEnum'
@@ -17,6 +18,14 @@ export class AuthenticationDao implements DaoModel {
   })
   userOrganization: UserOrganizationDao
 
+  @ManyToOne(() => CustomerDao, customer => customer.authentications, {
+    cascade: false
+  })
+  @JoinColumn({
+    name: 'customer_id'
+  })
+  customer: CustomerDao
+
   @Column()
   device: string
 
@@ -34,13 +43,15 @@ export class AuthenticationDao implements DaoModel {
     device: string,
     status: AuthenticationStatusEnum,
     token: string,
-    userOrganization: UserOrganizationDao
+    userOrganization?: UserOrganizationDao,
+    customer?: CustomerDao
   ) {
     this.id = id
     this.device = device
     this.status = status
     this.token = token
     this.userOrganization = userOrganization
+    this.customer = customer
   }
 
   toDomain() {
@@ -49,6 +60,7 @@ export class AuthenticationDao implements DaoModel {
       this.device,
       this.status,
       this.userOrganization?.toDomain(),
+      this.customer?.toDomain(),
       this.id
     )
   }

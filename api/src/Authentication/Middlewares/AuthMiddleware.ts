@@ -90,14 +90,26 @@ export class AuthMiddleware {
     token?: AuthenticationTokenDto,
     authenticationId?: string
   ) {
+    const isCustomer = !!req.header('x-customer-app')
+
     if (roleType === UserRoleTypeEnum.GUEST) {
       req.context = {
         organizationId: req.header('x-organization-id'),
-        user: {
-          id: 'guest',
-          email: 'guest@platform.com',
-          roleType: UserRoleTypeEnum.GUEST
-        }
+        user: !isCustomer
+          ? {
+              id: 'guest',
+              email: 'guest@platform.com',
+              roleType: UserRoleTypeEnum.GUEST
+            }
+          : null,
+        customer: isCustomer
+          ? {
+              id: 'guest',
+              email: 'guest@customer.com',
+              phone: '-',
+              name: 'Guest Customer'
+            }
+          : null
       }
     } else if (roleType !== UserRoleTypeEnum.PUBLIC) {
       delete req.headers['authorization']
@@ -105,11 +117,21 @@ export class AuthMiddleware {
       req.context = {
         organizationId: token.organization.id,
         authenticationId,
-        user: {
-          id: token.user.id,
-          email: token.user.email,
-          roleType: token.user.roleType
-        }
+        user: token.user
+          ? {
+              id: token.user.id,
+              email: token.user.email,
+              roleType: token.user.roleType
+            }
+          : null,
+        customer: token.customer
+          ? {
+              id: token.customer.id,
+              name: token.customer.name,
+              email: token.customer.email,
+              phone: token.customer.phone
+            }
+          : null
       }
     } else {
       req.context = {
