@@ -23,7 +23,7 @@ class NavDrawer extends StatelessWidget {
             title: const Text('Desconectar'),
             onTap: () {
               Provider.of<AuthenticationStore>(context, listen: false).logout();
-              Navigator.pushReplacementNamed(context, 'login');
+              Navigator.pushReplacementNamed(context, 'signin');
             },
           ),
         ],

@@ -18,7 +18,7 @@ export class RegisterService extends BaseService {
   }
 
   public async create(data: RegisterCreateDto) {
-    return this.transactionalF(async manager => {
+    return this.transactionalFn(async manager => {
       await this.validator.registerCreatePayloadValidate(data)
 
       const invalidDataException = new InvalidDataException('Invalid data.')

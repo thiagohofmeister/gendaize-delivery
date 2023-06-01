@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
       String? token = sharedPreferences.getString('token');
 
       if (token == null) {
-        Navigator.pushReplacementNamed(context, 'login');
+        Navigator.pushReplacementNamed(context, 'signin');
         return;
       }
 
@@ -37,8 +37,7 @@ class _HomePageState extends State<HomePage> {
         Provider.of<AuthenticationStore>(context, listen: false)
             .setToken(token);
       }).catchError((onError) {
-        print(onError);
-        Navigator.pushReplacementNamed(context, 'login');
+        Navigator.pushReplacementNamed(context, 'signin');
       });
     });
   }

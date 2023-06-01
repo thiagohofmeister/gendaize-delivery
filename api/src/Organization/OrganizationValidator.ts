@@ -15,7 +15,7 @@ export class OrganizationValidator extends BaseValidator {
       document: Joi.object({
         type: Joi.string().required(),
         number: Joi.string().required(),
-        name: Joi.string().required()
+        name: Joi.string().allow(null)
       }).required(),
       email: Joi.string().required(),
       phone: Joi.string().required()

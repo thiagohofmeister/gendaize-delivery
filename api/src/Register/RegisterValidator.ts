@@ -23,7 +23,7 @@ export class RegisterValidator extends BaseValidator {
         document: Joi.object({
           type: Joi.valid(...Object.keys(DocumentTypeEnum)).required(),
           number: Joi.string().required(),
-          name: Joi.string().required()
+          name: Joi.string().allow(null)
         }).required(),
         email: Joi.string().required(),
         phone: Joi.string().required()
