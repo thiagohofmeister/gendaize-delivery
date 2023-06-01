@@ -5,6 +5,8 @@ import { CustomerService } from '../../Customer/CustomerService'
 import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
 import { OrganizationService } from '../../Organization/OrganizationService'
 import { OrganizationValidator } from '../../Organization/OrganizationValidator'
+import { ProductService } from '../../Product/ProductService'
+import { ProductValidator } from '../../Product/ProductValidator'
 import { ProductTypeService } from '../../ProductType/ProductTypeService'
 import { ProductTypeValidator } from '../../ProductType/ProductTypeValidator'
 import { RegisterService } from '../../Register/RegisterService'
@@ -69,6 +71,15 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildRepository('ProductType'),
       new ProductTypeValidator()
+    )
+  }
+
+  public buildProductService() {
+    return new ProductService(
+      this.repositoryFactory.getDataSource(),
+      this.repositoryFactory.buildRepository('Product'),
+      new ProductValidator(),
+      this.buildProductTypeService()
     )
   }
 

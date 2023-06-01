@@ -115,7 +115,7 @@ CREATE TABLE public.product (
 	description varchar NULL,
 	variation_template varchar NULL,
 	status varchar NOT NULL,
-	product_type char(36) NOT NULL,
+	product_type_id char(36) NOT NULL,
 	organization_id char(36) NOT NULL,
 	CONSTRAINT product_pk PRIMARY KEY (id),
 	CONSTRAINT product_fk FOREIGN KEY (organization_id) REFERENCES public.organization(id),
