@@ -51,7 +51,9 @@ export class UserService extends BaseService {
       )
     )
 
-    return this.repository.save(user)
+    await this.repository.save(user)
+
+    return user
   }
 
   public async findOneByDocumentNumber(documentNumber: string): Promise<User> {

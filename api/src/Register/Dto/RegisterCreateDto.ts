@@ -2,6 +2,8 @@ import { OrganizationCreateDto } from '../../Organization/Dto/OrganizationCreate
 import { UserCreateDto } from '../../User/Dto/UserCreateDto'
 
 export interface RegisterCreateDto {
+  device: string
+  isCustomer: boolean
   user: UserCreateDto
   organization: OrganizationCreateDto
 }

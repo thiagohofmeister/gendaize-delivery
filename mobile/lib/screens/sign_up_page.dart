@@ -30,7 +30,8 @@ class _SignUpPageState extends State<SignUpPage> {
             content: Text('Cadastro finalizado com successo!'),
           ),
         );
-        Navigator.pop(context);
+
+        Navigator.pushReplacementNamed(context, 'home');
       },
     ).catchError((onError) {
       ScaffoldMessenger.of(context).showSnackBar(

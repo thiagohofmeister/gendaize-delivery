@@ -14,7 +14,11 @@ export class RegisterController extends BaseController {
     await this.responseHandler(
       res,
       next,
-      (await this.getServiceFactory(req)).buildRegisterService().create(req.body),
+      (await this.getServiceFactory(req)).buildRegisterService().create({
+        ...req.body,
+        device: req.header('User-Agent'),
+        isCustomer: !!req.header('x-customer-app')
+      }),
       ResponseTypeEnum.CREATED
     )
   }

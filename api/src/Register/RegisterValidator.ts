@@ -27,7 +27,9 @@ export class RegisterValidator extends BaseValidator {
         }).required(),
         email: Joi.string().required(),
         phone: Joi.string().required()
-      }).required()
+      }).required(),
+      device: Joi.string().required(),
+      isCustomer: Joi.boolean().required()
     })
   }
 

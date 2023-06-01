@@ -1,8 +1,11 @@
-import { DataSource } from 'typeorm'
+import { DataSource, EntityManager } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
 import { CustomerService } from '../Customer/CustomerService'
+import { Customer } from '../Customer/Models/Customer'
 import { JWT } from '../Shared/Modules/JWT'
+import { User } from '../User/Models/User'
 import { UserService } from '../User/UserService'
+import { UserOrganization } from '../UserOrganization/Models/UserOrganization'
 import { AuthenticationRepository } from './AuthenticationRepository'
 import { AuthenticationCreateDto } from './Dto/AuthenticationCreateDto'
 import { AuthenticationTokenDto } from './Dto/AuthenticationTokenDto'
@@ -12,7 +15,7 @@ import { Authentication } from './Models/Authentication'
 export class AuthenticationService extends BaseService {
   constructor(
     dataSource: DataSource,
-    private readonly authenticationRepository: AuthenticationRepository,
+    private readonly repository: AuthenticationRepository,
     private readonly userService: UserService,
     private readonly customerService: CustomerService,
     private readonly jwt: JWT
@@ -21,42 +24,46 @@ export class AuthenticationService extends BaseService {
   }
 
   async logout(id: string) {
-    await this.authenticationRepository.delete(id)
+    await this.repository.delete(id)
   }
 
   async authenticate(data: AuthenticationCreateDto) {
-    const authenticate = data.isCustomer
-      ? await this.authenticateCustomer(data)
-      : await this.authenticateUser(data)
-
-    return await this.authenticationRepository.create(authenticate)
-  }
-
-  private async authenticateCustomer(data: AuthenticationCreateDto): Promise<Authentication> {
-    const customer = await this.customerService.findOneByAuthData(data)
-
-    const jwtTokenData: AuthenticationTokenDto = {
-      customer: {
-        id: customer.getId(),
-        name: customer.getName(),
-        email: customer.getEmail(),
-        phone: customer.getPhone()
-      },
-      organization: {
-        id: customer.getOrganization().getId()
-      }
+    if (data.isCustomer) {
+      const customer = await this.customerService.findOneByAuthData(data)
+      return this.authenticateCustomer(customer, data.device)
     }
 
-    const token = this.jwt.sign(jwtTokenData)
-
-    return new Authentication(token, data.device, AuthenticationStatusEnum.ENABLED, null, customer)
-  }
-
-  private async authenticateUser(data: AuthenticationCreateDto): Promise<Authentication> {
     const user = await this.userService.findOneByAuthData(data)
 
+    return await this.authenticateUser(user, data.device)
+  }
+
+  public async authenticateCustomer(customer: Customer, device: string): Promise<Authentication> {
+    return this.repository.create(
+      new Authentication(
+        this.generateTokenToCustomer(customer),
+        device,
+        AuthenticationStatusEnum.ENABLED,
+        null,
+        customer
+      )
+    )
+  }
+
+  public async authenticateUser(user: User, device: string): Promise<Authentication> {
     const userOrganization = user.getAllOrganizations()?.[0]
 
+    return this.repository.create(
+      new Authentication(
+        this.generateTokenToUser(user, userOrganization),
+        device,
+        AuthenticationStatusEnum.ENABLED,
+        userOrganization
+      )
+    )
+  }
+
+  private generateTokenToUser(user: User, userOrganization: UserOrganization) {
     const jwtTokenData: AuthenticationTokenDto = {
       user: {
         id: user.getId(),
@@ -69,13 +76,27 @@ export class AuthenticationService extends BaseService {
       }
     }
 
-    const token = this.jwt.sign(jwtTokenData)
+    return this.jwt.sign(jwtTokenData)
+  }
 
-    return new Authentication(
-      token,
-      data.device,
-      AuthenticationStatusEnum.ENABLED,
-      userOrganization
-    )
+  private generateTokenToCustomer(customer: Customer) {
+    const jwtTokenData: AuthenticationTokenDto = {
+      customer: {
+        id: customer.getId(),
+        name: customer.getName(),
+        email: customer.getEmail(),
+        phone: customer.getPhone()
+      },
+      organization: {
+        id: customer.getOrganization().getId()
+      }
+    }
+
+    return this.jwt.sign(jwtTokenData)
+  }
+
+  public setManager(manager: EntityManager) {
+    this.repository.setManager(manager)
+    return this
   }
 }

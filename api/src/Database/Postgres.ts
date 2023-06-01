@@ -10,7 +10,7 @@ export class Postgres {
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: PathUtils.getEntities(),
-      logging: true
+      logging: process.env.DATABASE_LOGGING === 'true'
     })
 
     try {

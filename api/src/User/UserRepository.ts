@@ -1,3 +1,4 @@
+import { SelectQueryBuilder } from 'typeorm'
 import { TypeOrmMysqlRepositoryContract } from '../Shared/Modules/Repositories/TypeOrmMysqlRepositoryContract'
 import { EncryptUtils } from '../Shared/Utils/EncryptUtils'
 import { User } from './Models/User'
@@ -6,6 +7,12 @@ import { UserDao } from './Models/UserDao'
 export class UserRepository extends TypeOrmMysqlRepositoryContract<User, UserDao> {
   protected async beforeSave(entity: User): Promise<void> {
     entity.setPassword(entity.getPassword())
+  }
+
+  protected customToFindOneByPrimaryColumn(
+    query: SelectQueryBuilder<UserDao>
+  ): SelectQueryBuilder<UserDao> {
+    return query.innerJoin('UserDao.userOrganizations', 'organizations')
   }
 
   async findOneByAuthData(login: string, password: string): Promise<User> {

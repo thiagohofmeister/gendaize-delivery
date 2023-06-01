@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm'
+import { AuthenticationService } from '../Authentication/AuthenticationService'
 import { BaseService } from '../Base/BaseService'
 import { OrganizationService } from '../Organization/OrganizationService'
 import { InvalidDataException } from '../Shared/Models/Exceptions/InvalidDataException'
@@ -12,6 +13,7 @@ export class RegisterService extends BaseService {
     dataSource: DataSource,
     private readonly userService: UserService,
     private readonly organizationService: OrganizationService,
+    private readonly authenticationService: AuthenticationService,
     private readonly validator: RegisterValidator
   ) {
     super(dataSource)
@@ -40,7 +42,11 @@ export class RegisterService extends BaseService {
 
       const user = await this.userService.setManager(manager).create(organization, data.user)
 
-      return new Register(user, organization)
+      const authentication = await this.authenticationService
+        .setManager(manager)
+        .authenticateUser(user, data.device)
+
+      return new Register(user, organization, authentication)
     })
   }
 

@@ -44,6 +44,7 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.buildUserService(),
       this.buildOrganizationService(),
+      this.buildAuthenticationService(),
       new RegisterValidator()
     )
   }
