@@ -3,7 +3,8 @@ import { Organization } from '../../Organization/Models/Organization'
 import { ProductType } from '../../ProductType/Models/ProductType'
 import { DomainModel } from '../../Shared/Models/DomainModel'
 import { ResponseModel } from '../../Shared/Models/ResponseModel'
-import { AttributeValuesType } from '../Dto/AttributeValuesDto'
+import { AttributeSubTypeValuesType } from '../Dto/AttributeValuesDto'
+import { AttributeSubTypeEnum } from '../Enums/AttributeSubTypeEnum'
 import { AttributeTypeEnum } from '../Enums/AttributeTypeEnum'
 import { AttributeDao } from './AttributeDao'
 
@@ -11,7 +12,9 @@ export class Attribute implements ResponseModel, DomainModel {
   constructor(
     private label: string,
     private type: AttributeTypeEnum,
-    private values: AttributeValuesType,
+    private subType: AttributeSubTypeEnum,
+    private subTypeValues: AttributeSubTypeValuesType[],
+    private values: string[],
     private productType: ProductType,
     private organization: Organization,
     private id?: string
@@ -39,7 +42,15 @@ export class Attribute implements ResponseModel, DomainModel {
     return this.type
   }
 
-  public getValues(): AttributeValuesType {
+  public getSubType(): AttributeSubTypeEnum {
+    return this.subType
+  }
+
+  public getSubTypeValues(): AttributeSubTypeValuesType[] {
+    return this.subTypeValues
+  }
+
+  public getValues(): string[] {
     return this.values
   }
 
@@ -48,6 +59,8 @@ export class Attribute implements ResponseModel, DomainModel {
       id: this.getId(),
       label: this.getLabel(),
       type: this.getType(),
+      subType: this.getSubType(),
+      subTypeValues: this.getSubTypeValues(),
       values: this.getValues(),
       organization: this.getOrganization()?.toView(),
       productType: this.getProductType()?.toView()
@@ -59,6 +72,8 @@ export class Attribute implements ResponseModel, DomainModel {
       this.getId(),
       this.getLabel(),
       this.getType(),
+      this.getSubType(),
+      this.getSubTypeValues(),
       this.getValues(),
       this.getProductType()?.toDao(),
       this.getOrganization()?.toDao()

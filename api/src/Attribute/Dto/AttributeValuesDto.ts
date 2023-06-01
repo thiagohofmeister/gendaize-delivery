@@ -1,7 +1,6 @@
-export class AttributeValuesDto {
+export class AttributeSubTypeValuesDto {
   label: string
-  value: string
-  increments: string[]
+  value: string[]
 }
 
-export type AttributeValuesType = (string | AttributeValuesDto)[]
+export type AttributeSubTypeValuesType = (string | AttributeSubTypeValuesDto)[]

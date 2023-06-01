@@ -1,8 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import { OrganizationDao } from '../../Organization/Models/OrganizationDao'
 import { ProductTypeDao } from '../../ProductType/Models/ProductTypeDao'
 import { DaoModel } from '../../Shared/Models/DaoModel'
-import { AttributeValuesType } from '../Dto/AttributeValuesDto'
+import { VariationAttributeDao } from '../../VariationAttribute/Models/VariationAttributeDao'
+import { AttributeSubTypeValuesType } from '../Dto/AttributeValuesDto'
+import { AttributeSubTypeEnum } from '../Enums/AttributeSubTypeEnum'
 import { AttributeTypeEnum } from '../Enums/AttributeTypeEnum'
 import { Attribute } from './Attribute'
 
@@ -20,8 +22,21 @@ export class AttributeDao implements DaoModel {
   })
   type: AttributeTypeEnum
 
+  @Column({
+    type: 'enum',
+    enum: AttributeSubTypeEnum,
+    name: 'sub_type'
+  })
+  subType: AttributeSubTypeEnum
+
+  @Column({
+    type: 'json',
+    name: 'sub_type_values'
+  })
+  subTypeValues: AttributeSubTypeValuesType[]
+
   @Column('json')
-  values: AttributeValuesType
+  values: string[]
 
   @ManyToOne(() => OrganizationDao, organization => organization.attributes)
   @JoinColumn({
@@ -35,17 +50,27 @@ export class AttributeDao implements DaoModel {
   })
   productType: ProductTypeDao
 
+  @OneToMany(() => VariationAttributeDao, variationAttribute => variationAttribute.attribute)
+  @JoinColumn({
+    name: 'attribute_id'
+  })
+  variationAttributes: VariationAttributeDao[]
+
   constructor(
     id: string,
     label: string,
     type: AttributeTypeEnum,
-    values: AttributeValuesType,
+    subType: AttributeSubTypeEnum,
+    subTypeValues: AttributeSubTypeValuesType[],
+    values: string[],
     productType: ProductTypeDao,
     organization: OrganizationDao
   ) {
     this.id = id
     this.label = label
     this.type = type
+    this.subType = subType
+    this.subTypeValues = subTypeValues
     this.values = values
     this.productType = productType
     this.organization = organization
@@ -55,6 +80,8 @@ export class AttributeDao implements DaoModel {
     return new Attribute(
       this.label,
       this.type,
+      this.subType,
+      this.subTypeValues,
       this.values,
       this.productType?.toDomain(),
       this.organization?.toDomain(),

@@ -79,7 +79,8 @@ export class ServiceFactory {
       this.repositoryFactory.getDataSource(),
       this.repositoryFactory.buildRepository('Product'),
       new ProductValidator(),
-      this.buildProductTypeService()
+      this.buildProductTypeService(),
+      this.buildAttributeService()
     )
   }
 

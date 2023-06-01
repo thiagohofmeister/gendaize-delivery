@@ -40,7 +40,15 @@ export class AttributeService extends BaseService {
 
     const productType = await this.productTypeService.getById(data.productTypeId)
 
-    const attribute = new Attribute(data.label, data.type, data.values, productType, organization)
+    const attribute = new Attribute(
+      data.label,
+      data.type,
+      data.subType,
+      data.subTypeValues,
+      data.values,
+      productType,
+      organization
+    )
 
     return this.repository.save(attribute)
   }

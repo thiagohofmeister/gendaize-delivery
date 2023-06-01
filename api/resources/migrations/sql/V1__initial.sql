@@ -74,7 +74,7 @@ CREATE TABLE public.authentication (
 	created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT authentication_pk PRIMARY KEY (id),
 	CONSTRAINT authentication_fk FOREIGN KEY (user_organization_id) REFERENCES public.user_organization(id),
-  CONSTRAINT authentication_fk2 FOREIGN KEY (customer_id) REFERENCES public.customer(id)
+  CONSTRAINT authentication_fk_1 FOREIGN KEY (customer_id) REFERENCES public.customer(id)
 );
 
 
@@ -98,6 +98,8 @@ CREATE TABLE public."attribute" (
 	"label" varchar NULL,
 	"type" varchar NULL,
 	"values" json NULL,
+  sub_type varchar NULL,
+  sub_type_values json NULL,
 	product_type_id char(36) NOT NULL,
 	organization_id char(36) NOT NULL,
 	CONSTRAINT attribute_pk PRIMARY KEY (id),
@@ -113,7 +115,7 @@ CREATE TABLE public.product (
 	id char(36) NOT NULL,
 	"name" varchar NOT NULL,
 	description varchar NULL,
-	variation_template varchar NULL,
+	variation_template json NULL,
 	status varchar NOT NULL,
 	product_type_id char(36) NOT NULL,
 	organization_id char(36) NOT NULL,
@@ -131,12 +133,24 @@ CREATE TABLE public.variation (
 	code varchar NULL,
 	price_list int NOT NULL,
 	price_sale int NOT NULL,
-	variation_combination varchar NULL,
 	status varchar NOT NULL,
 	product_id char(36) NOT NULL,
 	CONSTRAINT variation_pk PRIMARY KEY (id),
-	CONSTRAINT variation_fk FOREIGN KEY (product_id) REFERENCES public.product(id),
-  CONSTRAINT variation_un UNIQUE (product_id,variation_combination)
+	CONSTRAINT variation_fk FOREIGN KEY (product_id) REFERENCES public.product(id)
+);
+
+
+-- -----------------------------------------------------
+-- Table `variation_attribute`
+-- -----------------------------------------------------
+CREATE TABLE public.variation_attribute (
+	id char(36) NOT NULL,
+	variation_id char(36) NOT NULL,
+	attribute_id char(36) NOT NULL,
+	value varchar NOT NULL,
+	CONSTRAINT variation_attribute_pk PRIMARY KEY (id),
+	CONSTRAINT variation_attribute_fk FOREIGN KEY (attribute_id) REFERENCES public."attribute"(id),
+	CONSTRAINT variation_attribute_fk_1 FOREIGN KEY (variation_id) REFERENCES public.variation(id)
 );
 
 
