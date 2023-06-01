@@ -3,12 +3,12 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:mobile/models/register_model.dart';
 
 class UserStep extends StatefulWidget {
-  Function previousStep;
-  Function nextStep;
-  Function(RegisterUserModel) handleData;
-  RegisterUserModel? data;
+  final Function previousStep;
+  final Function nextStep;
+  final Function(RegisterUserModel) handleData;
+  final RegisterUserModel? data;
 
-  UserStep(
+  const UserStep(
       {Key? key,
       required this.previousStep,
       required this.nextStep,

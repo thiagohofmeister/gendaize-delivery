@@ -4,12 +4,12 @@ import 'package:mobile/models/enums/organization_type.dart';
 import 'package:mobile/models/register_model.dart';
 
 class OrganizationStep extends StatefulWidget {
-  Function previousStep;
-  Function nextStep;
-  Function(RegisterOrganizationModel) handleData;
-  RegisterOrganizationModel? data;
+  final Function previousStep;
+  final Function nextStep;
+  final Function(RegisterOrganizationModel) handleData;
+  final RegisterOrganizationModel? data;
 
-  OrganizationStep(
+  const OrganizationStep(
       {Key? key,
       required this.previousStep,
       required this.nextStep,
