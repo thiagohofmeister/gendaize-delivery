@@ -121,7 +121,7 @@ CREATE TABLE public.product (
 	organization_id char(36) NOT NULL,
 	CONSTRAINT product_pk PRIMARY KEY (id),
 	CONSTRAINT product_fk FOREIGN KEY (organization_id) REFERENCES public.organization(id),
-	CONSTRAINT product_fk_1 FOREIGN KEY (product_type) REFERENCES public.product_type(id)
+	CONSTRAINT product_fk_1 FOREIGN KEY (product_type_id) REFERENCES public.product_type(id)
 );
 
 
