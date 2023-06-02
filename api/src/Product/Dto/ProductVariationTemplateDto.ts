@@ -1,8 +1,7 @@
 export interface ProductVariationTemplateDto {
   attributes: {
-    attribute: {
-      id: string
-      label: string
-    }
+    id: string
+    label: string
   }[]
+  images?: string
 }

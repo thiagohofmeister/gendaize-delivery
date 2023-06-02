@@ -109,6 +109,43 @@ export class ProductService extends BaseService {
     }
   }
 
+  private async getVariationCombinations(
+    variationTemplate: ProductVariationTemplateDto,
+    variations: Variation[],
+    fieldCombination: 'images'
+  ): Promise<string[]> {
+    const variationCombinations = []
+
+    // The attribute used in the combination must be having in the attributes of variationTemplate
+    this.validator.validateIfCombinationAttributeIdExistsOnVariationTemplateAttributes(
+      variationTemplate,
+      fieldCombination
+    )
+
+    const partialCombinations = []
+    for (const attr of variationTemplate.attributes) {
+      partialCombinations.push(attr.id)
+      if (attr.id === variationTemplate[fieldCombination]) {
+        break
+      }
+    }
+
+    return variations.map(variation => {
+      const combination = []
+
+      for (const partialCombination of partialCombinations) {
+        combination.push(
+          variation
+            .getAttributes()
+            .find(attr => attr.getAttribute().getId() === partialCombination)
+            .getValue()
+        )
+      }
+
+      return combination.join('+')
+    })
+  }
+
   private async fillAttributes(
     variation: Variation,
     variationTemplate: ProductVariationTemplateDto,
@@ -137,9 +174,8 @@ export class ProductService extends BaseService {
           const variationAttribute = new VariationAttribute(attributeDto.value, null, attribute)
 
           // Fill label of attribute in the variationTemplate
-          variationTemplate.attributes.find(
-            attr => attr.attribute.id === attribute.getId()
-          ).attribute.label = attribute.getLabel()
+          variationTemplate.attributes.find(attr => attr.id === attribute.getId()).label =
+            attribute.getLabel()
 
           variation.addAttribute(variationAttribute)
         } catch (e) {

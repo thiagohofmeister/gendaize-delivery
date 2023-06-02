@@ -22,13 +22,12 @@ export class ProductValidator extends BaseValidator {
         attributes: Joi.array()
           .items(
             Joi.object({
-              attribute: Joi.object({
-                id: Joi.string().required()
-              }).required()
+              id: Joi.string().required()
             }).required()
           )
           .min(1)
-          .required()
+          .required(),
+        images: Joi.string().allow(null)
       }).allow(null),
       status: Joi.valid(...Object.keys(ProductStatusEnum)).required(),
       productTypeId: Joi.string().required(),
@@ -81,10 +80,10 @@ export class ProductValidator extends BaseValidator {
     }
 
     variationTemplate.attributes.forEach(attrTemplate => {
-      if (!attributes.some(attr => attr.attribute.id === attrTemplate.attribute.id)) {
+      if (!attributes.some(attr => attr.attribute.id === attrTemplate.id)) {
         errorReasons.push({
-          id: `variations.${variationIndex}.attributes.[].attribute.id.${attrTemplate.attribute.id}`,
-          message: `Attribute with id ${attrTemplate.attribute.id} is required.`
+          id: `variations.${variationIndex}.attributes.[].attribute.id.${attrTemplate.id}`,
+          message: `Attribute with id ${attrTemplate.id} is required.`
         })
       }
     })
@@ -106,5 +105,45 @@ export class ProductValidator extends BaseValidator {
       message: `Value ${value} not allowed.`,
       enum: values
     })
+  }
+
+  validateIfCombinationAttributeIdExistsOnVariationTemplateAttributes(
+    variationTemplate: ProductVariationTemplateDto,
+    fieldCombination: string
+  ) {
+    const attributeId = variationTemplate[fieldCombination]
+    if (
+      !variationTemplate ||
+      !attributeId ||
+      variationTemplate.attributes.some(attr => attr.id === attributeId)
+    ) {
+      return
+    }
+
+    throw new InvalidDataException('Error', [
+      {
+        id: `variationTemplate.${fieldCombination}.${attributeId}`,
+        message: `The attribute used in the combination must be having in the attributes of variationTemplate.`
+      }
+    ])
+  }
+
+  validateIfCombinationIsAvailable(
+    combination: string,
+    variationAvailableCombinations: string[],
+    fieldCombination: string,
+    index: number
+  ) {
+    if (variationAvailableCombinations.includes(combination) || !combination) {
+      return
+    }
+
+    throw new InvalidDataException('Error', [
+      {
+        id: `${fieldCombination}.${index}.value.${combination}`,
+        message: `The combination does not available.`,
+        enum: variationAvailableCombinations
+      }
+    ])
   }
 }

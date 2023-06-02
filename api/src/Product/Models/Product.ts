@@ -4,9 +4,9 @@ import { ProductType } from '../../ProductType/Models/ProductType'
 import { DomainModel } from '../../Shared/Models/DomainModel'
 import { ResponseModel } from '../../Shared/Models/ResponseModel'
 import { Variation } from '../../Variation/Models/Variation'
+import { ProductVariationTemplateDto } from '../Dto/ProductVariationTemplateDto'
 import { ProductStatusEnum } from '../Enums/ProductStatusEnum'
 import { ProductDao } from './ProductDao'
-import { ProductVariationTemplateDto } from '../Dto/ProductVariationTemplateDto'
 
 export class Product implements ResponseModel, DomainModel {
   private variations: Variation[]
@@ -94,8 +94,6 @@ export class Product implements ResponseModel, DomainModel {
     if (this.getVariations()) {
       entity.variations = this.getVariations().map(variation => variation.toDao())
     }
-
-    console.log({ entity })
 
     return entity
   }
