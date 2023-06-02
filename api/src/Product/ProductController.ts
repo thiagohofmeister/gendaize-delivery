@@ -20,7 +20,7 @@ export class ProductController extends BaseController {
       (await this.getServiceFactory(request))
         .buildProductService()
         .create(request.context.organization, request.body),
-      ResponseTypeEnum.OK
+      ResponseTypeEnum.CREATED
     )
   }
 

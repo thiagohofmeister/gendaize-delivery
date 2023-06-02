@@ -20,7 +20,7 @@ export class AttributeController extends BaseController {
       (await this.getServiceFactory(request))
         .buildAttributeService()
         .create(request.context.organization, request.body),
-      ResponseTypeEnum.OK
+      ResponseTypeEnum.CREATED
     )
   }
 
