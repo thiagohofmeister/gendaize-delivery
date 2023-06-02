@@ -62,6 +62,10 @@ export class ProductService extends BaseService {
       organization
     )
 
+    // TODO: Validate variation duplicates
+    // TODO: Validate variation price.list > price.sale or equals
+    // TODO: Implementing product images
+
     await this.fillVariations(product, data.variationTemplate, data.variations)
 
     return this.repository.save(product)
