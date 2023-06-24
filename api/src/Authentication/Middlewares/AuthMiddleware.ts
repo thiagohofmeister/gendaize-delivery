@@ -20,8 +20,7 @@ export class AuthMiddleware {
   }
 
   public async forAll(req: CoreRequest, res: Response, next: NextFunction): Promise<void> {
-    let userPermissions = []
-
+    console.log('AUTH MIDDLEWARE')
     if (this.isPublicRequest(req)) {
       await this.formatRequest(req, UserRoleTypeEnum.PUBLIC)
     } else if (this.isGuestRequest(req)) {
@@ -39,18 +38,17 @@ export class AuthMiddleware {
         return
       }
 
-      await new Postgres().createDataSource()
-      const postgres = Postgres.getDataSource()
-
-      const authentication = await postgres.getRepository(AuthenticationDao).findOne({
-        where: {
-          userOrganization: {
-            user: { id: decodedToken.user.id },
-            organization: { id: decodedToken.organization.id }
-          },
-          token: token
-        }
-      })
+      const authentication = await Postgres.getDataSource()
+        .getRepository(AuthenticationDao)
+        .findOne({
+          where: {
+            userOrganization: {
+              user: { id: decodedToken.user.id },
+              organization: { id: decodedToken.organization.id }
+            },
+            token: token
+          }
+        })
 
       if (!authentication) {
         res.status(401).send({
@@ -142,18 +140,19 @@ export class AuthMiddleware {
     }
 
     if (!!req.context.organizationId) {
-      await new Postgres().createDataSource()
-      const postgres = Postgres.getDataSource()
+      try {
+        const organization = await Postgres.getDataSource()
+          .getRepository(OrganizationDao)
+          .findOne({
+            where: {
+              id: req.context.organizationId
+            }
+          })
 
-      const organization = await postgres.getRepository(OrganizationDao).findOne({
-        where: {
-          id: req.context.organizationId
+        if (!!organization) {
+          req.context.organization = organization.toDomain()
         }
-      })
-
-      if (!!organization) {
-        req.context.organization = organization.toDomain()
-      }
+      } catch (e) {}
     }
   }
 

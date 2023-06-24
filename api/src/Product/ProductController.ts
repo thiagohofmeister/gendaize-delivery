@@ -18,7 +18,7 @@ export class ProductController extends BaseController {
       response,
       next,
       (await this.getServiceFactory(request))
-        .buildProductService()
+        .buildService('Product')
         .create(request.context.organization, request.body),
       ResponseTypeEnum.CREATED
     )
@@ -28,7 +28,7 @@ export class ProductController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductService().get(request.query),
+      (await this.getServiceFactory(request)).buildService('Product').get(request.query),
       ResponseTypeEnum.OK
     )
   }
@@ -37,7 +37,7 @@ export class ProductController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductService().getById(request.params.id),
+      (await this.getServiceFactory(request)).buildService('Product').getById(request.params.id),
       ResponseTypeEnum.OK
     )
   }
@@ -50,7 +50,7 @@ export class ProductController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildProductService().delete(request.params.id),
+      (await this.getServiceFactory(request)).buildService('Product').delete(request.params.id),
       ResponseTypeEnum.NO_CONTENT
     )
   }

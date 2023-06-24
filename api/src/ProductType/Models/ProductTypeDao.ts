@@ -13,7 +13,7 @@ export class ProductTypeDao implements DaoModel {
   @Column()
   label: string
 
-  @ManyToOne(() => OrganizationDao, organization => organization.userOrganizations)
+  @ManyToOne(() => OrganizationDao, organization => organization.productTypes)
   @JoinColumn({
     name: 'organization_id'
   })

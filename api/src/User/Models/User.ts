@@ -69,12 +69,14 @@ export class User implements ResponseModel, DomainModel {
     return this.id
   }
 
-  public removeOrganizations(keepOrganizationIds: string[]) {
+  public getOrganizations(): UserOrganization[] {
+    return this.organizations
+  }
+
+  public removeOrganizations(idsToKeep: string[]) {
     if (!this.organizations) this.organizations = []
 
-    this.organizations = this.organizations.filter(
-      org => !keepOrganizationIds.includes(org.getId())
-    )
+    this.organizations = this.organizations.filter(org => idsToKeep.includes(org.getId()))
 
     return this.organizations
   }
@@ -83,10 +85,6 @@ export class User implements ResponseModel, DomainModel {
     if (!this.organizations) this.organizations = []
     this.organizations.push(userOrganization)
     return this
-  }
-
-  public getAllOrganizations(): UserOrganization[] {
-    return this.organizations
   }
 
   toView() {
@@ -109,8 +107,8 @@ export class User implements ResponseModel, DomainModel {
       this.getStatus()
     )
 
-    if (this.getAllOrganizations()) {
-      user.userOrganizations = this.getAllOrganizations().map(userOrg => userOrg.toDao())
+    if (this.getOrganizations()) {
+      user.userOrganizations = this.getOrganizations().map(userOrg => userOrg.toDao())
     }
 
     return user

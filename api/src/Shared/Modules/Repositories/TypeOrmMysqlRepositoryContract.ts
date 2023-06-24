@@ -65,17 +65,31 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async findAll<TFilter extends FilterDefault>(
     filter: TFilter,
-    bypassorganizationId: boolean = false
+    bypassorganizationId: boolean = false,
+    withoutPaginators: boolean = false
   ): Promise<ListResponseModel<TDomainEntity>> {
-    const query = this.applyPaginator(
-      filter,
-      this.customToFindAll(this.getRepository().createQueryBuilder(), filter)
-    )
+    let query = this.customToFindAll(this.getRepository().createQueryBuilder(), filter)
+
+    if (!withoutPaginators) {
+      query = this.applyPaginator(filter, query)
+    }
 
     if (this.hasColumn('organizationId') && !bypassorganizationId) {
       query.andWhere(`${this.getTableName()}.organization_id = :organizationId`, {
         organizationId: this.organizationId
       })
+    } else if (this.hasColumn('headquarter') && !bypassorganizationId) {
+      query
+        .leftJoinAndSelect(`${this.getTableName()}.headquarter`, 'headquarter')
+        .andWhere(`headquarter.organization_id = :organizationId`, {
+          organizationId: this.organizationId
+        })
+    } else if (this.hasColumn('organization') && !bypassorganizationId) {
+      query
+        .leftJoinAndSelect(`${this.getTableName()}.organization`, 'organization')
+        .andWhere(`organization.id = :organizationId`, {
+          organizationId: this.organizationId
+        })
     }
 
     return this.getMany(query)
@@ -91,10 +105,23 @@ export abstract class TypeOrmMysqlRepositoryContract<
         .where(`${this.getTableName()}.${this.getPrimaryColumnName()} = :value`, { value })
     )
 
-    if (this.hasColumn('organizationId') && !bypassorganizationId)
+    if (this.hasColumn('organizationId') && !bypassorganizationId) {
       query.andWhere(`${this.getTableName()}.organization_id = :organizationId`, {
         organizationId: this.organizationId
       })
+    } else if (this.hasColumn('headquarter') && !bypassorganizationId) {
+      query
+        .leftJoinAndSelect(`${this.getTableName()}.headquarter`, 'headquarter')
+        .andWhere(`headquarter.organization_id = :organizationId`, {
+          organizationId: this.organizationId
+        })
+    } else if (this.hasColumn('organization') && !bypassorganizationId) {
+      query
+        .leftJoinAndSelect(`${this.getTableName()}.organization`, 'organization')
+        .andWhere(`organization.id = :organizationId`, {
+          organizationId: this.organizationId
+        })
+    }
 
     return this.getOne(query)
   }

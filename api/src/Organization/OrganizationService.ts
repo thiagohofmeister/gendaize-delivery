@@ -1,10 +1,14 @@
 import { DataSource, EntityManager } from 'typeorm'
 import { BaseService } from '../Base/BaseService'
+import { Location } from '../Location/Models/Location'
+import { DataNotFoundException } from '../Shared/Models/Exceptions/DataNotFoundException'
+import { ServiceDecorator } from '../Shared/Utils/DecoratorUtils'
 import { OrganizationCreateDto } from './Dto/OrganizationCreateDto'
 import { Organization } from './Models/Organization'
 import { OrganizationRepository } from './OrganizationRepository'
 import { OrganizationValidator } from './OrganizationValidator'
 
+@ServiceDecorator
 export class OrganizationService extends BaseService {
   constructor(
     dataSource: DataSource,
@@ -27,6 +31,22 @@ export class OrganizationService extends BaseService {
         data.phone
       )
     )
+  }
+
+  public async getLocations(id: string): Promise<Location[]> {
+    const locations = []
+
+    const organization = await this.repository.findOneByPrimaryColumn(id)
+
+    if (!organization) throw new DataNotFoundException()
+
+    organization.getHeadquarters().forEach(headquarter => {
+      headquarter.getLocations()?.forEach(location => {
+        locations.push(location)
+      })
+    })
+
+    return locations
   }
 
   public async findOneByDocumentNumber(documentNumber: string): Promise<Organization> {

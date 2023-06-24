@@ -18,7 +18,7 @@ export class AttributeController extends BaseController {
       response,
       next,
       (await this.getServiceFactory(request))
-        .buildAttributeService()
+        .buildService('Attribute')
         .create(request.context.organization, request.body),
       ResponseTypeEnum.CREATED
     )
@@ -28,7 +28,7 @@ export class AttributeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildAttributeService().get(request.query),
+      (await this.getServiceFactory(request)).buildService('Attribute').get(request.query),
       ResponseTypeEnum.OK
     )
   }
@@ -37,7 +37,7 @@ export class AttributeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildAttributeService().getById(request.params.id),
+      (await this.getServiceFactory(request)).buildService('Attribute').getById(request.params.id),
       ResponseTypeEnum.OK
     )
   }
@@ -50,7 +50,7 @@ export class AttributeController extends BaseController {
     return this.responseHandler(
       response,
       next,
-      (await this.getServiceFactory(request)).buildAttributeService().delete(request.params.id),
+      (await this.getServiceFactory(request)).buildService('Attribute').delete(request.params.id),
       ResponseTypeEnum.NO_CONTENT
     )
   }

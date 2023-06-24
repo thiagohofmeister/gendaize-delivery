@@ -54,7 +54,7 @@ export class UserDao implements DaoModel {
   }
 
   toDomain() {
-    const user = new User(
+    const domain = new User(
       this.name,
       this.documentNumber,
       this.email,
@@ -64,9 +64,9 @@ export class UserDao implements DaoModel {
     )
 
     if (this.userOrganizations) {
-      this.userOrganizations.map(usrOrg => user.addOrganization(usrOrg.toDomain()))
+      this.userOrganizations.map(usrOrg => domain.addOrganization(usrOrg.toDomain()))
     }
 
-    return user
+    return domain
   }
 }

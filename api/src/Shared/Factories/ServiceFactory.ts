@@ -1,95 +1,49 @@
-import { AttributeService } from '../../Attribute/AttributeService'
-import { AttributeValidator } from '../../Attribute/AttributeValidator'
-import { AuthenticationService } from '../../Authentication/AuthenticationService'
-import { CustomerService } from '../../Customer/CustomerService'
-import { EndpointPermissionsService } from '../../EndpointPermissions/EndpointPermissionsService'
-import { OrganizationService } from '../../Organization/OrganizationService'
-import { OrganizationValidator } from '../../Organization/OrganizationValidator'
-import { ProductService } from '../../Product/ProductService'
-import { ProductValidator } from '../../Product/ProductValidator'
-import { ProductTypeService } from '../../ProductType/ProductTypeService'
-import { ProductTypeValidator } from '../../ProductType/ProductTypeValidator'
-import { RegisterService } from '../../Register/RegisterService'
-import { RegisterValidator } from '../../Register/RegisterValidator'
-import { UserService } from '../../User/UserService'
-import { UserValidator } from '../../User/UserValidator'
 import { JWT } from '../Modules/JWT'
+import { PathUtils } from '../Utils/PathUtils'
+import { ProviderFactory } from './ProviderFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
-  constructor(private readonly repositoryFactory: RepositoryFactory) {}
+  constructor(
+    private readonly repositoryFactory: RepositoryFactory,
+    private readonly providerFactory: ProviderFactory
+  ) {}
 
-  public buildEndpointPermissionsService() {
-    return new EndpointPermissionsService()
-  }
+  buildService(domainName: string): any {
+    const Service = PathUtils.getService(domainName)
 
-  public buildAuthenticationService() {
-    return new AuthenticationService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Authentication'),
-      this.buildUserService(),
-      this.buildCustomerService(),
-      new JWT(process.env.JWT_KEY)
-    )
-  }
+    return Reflect.construct(
+      Service,
+      Service.getReflect().map(item => {
+        switch (item.name) {
+          case 'DataSource':
+            return this.repositoryFactory.getDataSource()
 
-  public buildOrganizationService() {
-    return new OrganizationService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Organization'),
-      new OrganizationValidator()
-    )
-  }
+          case `${domainName}Repository`:
+            return this.repositoryFactory.buildRepository(domainName)
 
-  public buildRegisterService() {
-    return new RegisterService(
-      this.repositoryFactory.getDataSource(),
-      this.buildUserService(),
-      this.buildOrganizationService(),
-      this.buildAuthenticationService(),
-      new RegisterValidator()
-    )
-  }
+          case `${domainName}Validator`:
+            return Reflect.construct(PathUtils.getValidator(domainName), [])
 
-  public buildUserService() {
-    return new UserService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('User'),
-      new UserValidator()
-    )
-  }
+          case 'JWT':
+            return new JWT(process.env.JWT_KEY)
 
-  public buildCustomerService() {
-    return new CustomerService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Customer')
-    )
-  }
+          default:
+            if (item.name.includes('Provider')) {
+              return this.providerFactory[`build${item.name}`]()
+            }
 
-  public buildProductTypeService() {
-    return new ProductTypeService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('ProductType'),
-      new ProductTypeValidator()
-    )
-  }
+            if (item.name.includes('Service')) {
+              return this.buildService(item.name.replace('Service', ''))
+            }
 
-  public buildProductService() {
-    return new ProductService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Product'),
-      new ProductValidator(),
-      this.buildProductTypeService(),
-      this.buildAttributeService()
-    )
-  }
+            if (item.name.includes('Repository')) {
+              return this.repositoryFactory.buildRepository(item.name.replace('Repository', ''))
+            }
 
-  public buildAttributeService() {
-    return new AttributeService(
-      this.repositoryFactory.getDataSource(),
-      this.repositoryFactory.buildRepository('Attribute'),
-      new AttributeValidator(),
-      this.buildProductTypeService()
+            throw new Error(`Not implemented factory to: ${item.name}`)
+        }
+      })
     )
   }
 }

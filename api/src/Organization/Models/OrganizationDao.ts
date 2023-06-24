@@ -1,7 +1,11 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 
 import { AttributeDao } from '../../Attribute/Models/AttributeDao'
+import { HeadquarterDao } from '../../Headquarter/Models/HeadquarterDao'
+import { OrganizationConfigurationDao } from '../../OrganizationConfiguration/Models/OrganizationConfigurationDao'
+import { ProductTypeDao } from '../../ProductType/Models/ProductTypeDao'
 import { DaoModel } from '../../Shared/Models/DaoModel'
+import { TaxDao } from '../../Tax/Models/TaxDao'
 import { UserOrganizationDao } from '../../UserOrganization/Models/UserOrganizationDao'
 import { DocumentTypeEnum } from '../Enums/DocumentTypeEnum'
 import { Organization } from './Organization'
@@ -49,6 +53,33 @@ export class OrganizationDao implements DaoModel {
   })
   attributes: AttributeDao[]
 
+  @OneToMany(() => ProductTypeDao, productType => productType.organization)
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  productTypes: ProductTypeDao[]
+
+  @OneToMany(
+    () => OrganizationConfigurationDao,
+    OrganizationConfiguration => OrganizationConfiguration.organization
+  )
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  organizationConfigurations: OrganizationConfigurationDao[]
+
+  @OneToMany(() => HeadquarterDao, headquarter => headquarter.organization)
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  headquarters: HeadquarterDao[]
+
+  @OneToMany(() => TaxDao, tax => tax.organization)
+  @JoinColumn({
+    name: 'organization_id'
+  })
+  taxes: TaxDao[]
+
   constructor(
     id: string,
     name: string,
@@ -68,7 +99,7 @@ export class OrganizationDao implements DaoModel {
   }
 
   toDomain(): Organization {
-    return new Organization(
+    const domain = new Organization(
       this.name,
       this.documentType,
       this.documentNumber,
@@ -77,5 +108,15 @@ export class OrganizationDao implements DaoModel {
       this.phone,
       this.id
     )
+
+    if (this.organizationConfigurations) {
+      this.organizationConfigurations.forEach(config => domain.addConfiguration(config.toDomain()))
+    }
+
+    if (this.headquarters) {
+      this.headquarters.forEach(headquarter => domain.addHeadquarter(headquarter.toDomain()))
+    }
+
+    return domain
   }
 }

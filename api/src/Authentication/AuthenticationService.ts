@@ -3,6 +3,7 @@ import { BaseService } from '../Base/BaseService'
 import { CustomerService } from '../Customer/CustomerService'
 import { Customer } from '../Customer/Models/Customer'
 import { JWT } from '../Shared/Modules/JWT'
+import { ServiceDecorator } from '../Shared/Utils/DecoratorUtils'
 import { User } from '../User/Models/User'
 import { UserService } from '../User/UserService'
 import { UserOrganization } from '../UserOrganization/Models/UserOrganization'
@@ -12,6 +13,7 @@ import { AuthenticationTokenDto } from './Dto/AuthenticationTokenDto'
 import { AuthenticationStatusEnum } from './Enums/AuthenticationStatusEnum'
 import { Authentication } from './Models/Authentication'
 
+@ServiceDecorator
 export class AuthenticationService extends BaseService {
   constructor(
     dataSource: DataSource,
@@ -51,7 +53,7 @@ export class AuthenticationService extends BaseService {
   }
 
   public async authenticateUser(user: User, device: string): Promise<Authentication> {
-    const userOrganization = user.getAllOrganizations()?.[0]
+    const userOrganization = user.getOrganizations()?.[0]
 
     return this.repository.create(
       new Authentication(
