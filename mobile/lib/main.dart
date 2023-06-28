@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/home_page.dart';
-import 'package:mobile/screens/sign_in_page.dart';
-import 'package:mobile/screens/sign_up_page.dart';
-import 'package:mobile/store/authentication_store.dart';
-import 'package:mobile/store/user_logged_store.dart';
+import 'package:mobile/screens/main_screen.dart';
+import 'package:mobile/screens/splash_screen.dart';
+import 'package:mobile/store/navigation_store.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => UserLoggedStore()),
-      ChangeNotifierProvider(create: (_) => AuthenticationStore()),
+      ChangeNotifierProvider(create: (_) => NavigationStore()),
     ],
     child: const MyApp(),
   ));
@@ -26,15 +23,14 @@ class MyApp extends StatelessWidget {
       title: 'Gendaize Delivery',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+          seedColor: Colors.lightBlue,
         ),
         useMaterial3: true,
       ),
-      initialRoute: 'home',
+      initialRoute: 'splash',
       routes: {
-        'signin': (context) => const SignInPage(),
-        'signup': (context) => const SignUpPage(),
-        'home': (context) => const HomePage(),
+        'splash': (context) => const SplashScreen(),
+        'main': (context) => const MainScreen(),
       },
     );
   }
