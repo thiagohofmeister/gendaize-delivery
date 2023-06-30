@@ -1,15 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_client_base/components/template/nav_drawer.dart';
+import 'package:mobile_client_base/components/product/product_horizontal_list.dart';
+import 'package:mobile_client_base/components/product/product_vertical_list_item.dart';
+import 'package:mobile_client_base/store/product_store.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: const NavDrawer(),
-      body: const Center(child: Text('Bem vindo')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Sua localização',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(Icons.keyboard_arrow_down)
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  ProductHorizontalList(
+                    title: 'Seus últimos pedidos',
+                    products: Provider.of<ProductStore>(context).items,
+                  ),
+                  const SizedBox(height: 20),
+                  ProductHorizontalList(
+                    title: 'Mais pedidos',
+                    products: Provider.of<ProductStore>(context).items,
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+            SliverList.builder(
+              itemCount: Provider.of<ProductStore>(context).items.length,
+              itemBuilder: (context, index) {
+                return ProductVerticalListItem(
+                  Provider.of<ProductStore>(context).items[index],
+                );
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
