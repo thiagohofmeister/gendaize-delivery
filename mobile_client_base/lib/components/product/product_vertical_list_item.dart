@@ -22,8 +22,8 @@ class ProductVerticalListItem extends StatelessWidget {
         width: double.infinity,
         height: 150,
         decoration: const BoxDecoration(
-          border: Border.symmetric(
-            horizontal: BorderSide(color: Colors.black12),
+          border: Border(
+            bottom: BorderSide(color: Colors.black12),
           ),
         ),
         child: Row(

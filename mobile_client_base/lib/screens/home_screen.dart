@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_client_base/components/product/product_horizontal_list.dart';
-import 'package:mobile_client_base/components/product/product_vertical_list_item.dart';
+import 'package:mobile_client_base/components/product/product_vertical_list.dart';
 import 'package:mobile_client_base/store/product_store.dart';
 import 'package:provider/provider.dart';
 
@@ -60,14 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            SliverList.builder(
-              itemCount: Provider.of<ProductStore>(context).items.length,
-              itemBuilder: (context, index) {
-                return ProductVerticalListItem(
-                  Provider.of<ProductStore>(context).items[index],
-                );
-              },
-            )
+            ProductVerticalList(
+              title: "Lanches",
+              products: Provider.of<ProductStore>(context).items,
+            ),
           ],
         ),
       ),

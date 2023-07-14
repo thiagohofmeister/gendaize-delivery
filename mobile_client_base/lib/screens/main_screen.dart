@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_client_base/components/template/nav_bottom.dart';
 import 'package:mobile_client_base/components/template/nav_drawer.dart';
 import 'package:mobile_client_base/store/navigation_store.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       drawer: const NavDrawer(),
-      bottomNavigationBar: const NavBottom(),
+      //bottomNavigationBar: const NavBottom(),
       body: navigationStore.currentScreen.widget,
     );
   }

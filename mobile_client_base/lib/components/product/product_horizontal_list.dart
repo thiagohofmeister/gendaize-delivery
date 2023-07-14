@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_client_base/components/product/product_horizontal_list_item.dart';
+import 'package:mobile_client_base/components/product/product_title_list.dart';
 import 'package:mobile_client_base/models/product/product_model.dart';
 
 class ProductHorizontalList extends StatelessWidget {
@@ -17,16 +18,7 @@ class ProductHorizontalList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        ProductTitleList(title),
         SizedBox(
           height: 120,
           child: ListView.builder(
